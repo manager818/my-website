@@ -11,7 +11,41 @@
   --black: #111111;--dark: #1A1A1A;--dark2: #252525;--white: #FFFFFF;--off: #FAFAFA;
   --border: #EADDF0;--text: #1A1A2E;--muted: #7A7A8A;--green: #1E9B6B;--blue: #1A6BC4;
   --radius: 10px;--shadow: 0 2px 14px rgba(224,32,160,0.10);
-}
+}<!DOCTYPE html>
+<html>
+<head>
+  <title>My Website</title>
+</head>
+<body>
+  <h1>Welcome to My Website</h1>
+
+  <!-- Your form or content goes here -->
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+  <script>
+    // Replace with your actual Firebase config from Console
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "my-website-db.firebaseapp.com",
+      projectId: "my-website-db",
+      storageBucket: "my-website-db.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
+  <!-- Your own script.js should be linked AFTER Firebase -->
+  <script src="script.js"></script>
+</body>
+</html>
+
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',sans-serif;background:var(--off);color:var(--text);min-height:100vh;}
 .header{background:#fff;border-bottom:3px solid var(--pink);padding:0;box-shadow:0 2px 12px rgba(224,32,160,0.12);}
