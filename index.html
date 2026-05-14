@@ -568,6 +568,33 @@ function loadData(){
     try{ wiringAssign=JSON.parse(localStorage.getItem(LS_WIRING_ASSIGN)||'{}'); }catch(e){ wiringAssign={}; }
   } catch(e){ projects=[]; changelog=[]; salespersons=[]; }
 }
+  async function loadCloudWiring(){
+
+  const { data, error } = await supabaseClient
+    .from('wiring_assignments')
+    .select('*');
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  if(data){
+
+    data.forEach(r => {
+
+      wiringAssign[r.project_no] = {
+        person: r.person || '',
+        startDate: r.start_date || '',
+        endDate: r.end_date || '',
+        note: r.note || ''
+      };
+
+    });
+
+    renderWiringPlanner();
+  }
+}
 async function saveData(){
 
   try {
