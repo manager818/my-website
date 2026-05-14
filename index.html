@@ -540,7 +540,15 @@ const LS_CHANGELOG='ail_changelog_v1';
 const LS_SALESPERSONS='ail_salespersons_v1';
 const LS_CUSTOMERS='ail_customers_v1';
 const LS_WIRING_PERSONS = 'ail_wiring_persons_v1';
-const LS_WIRING_ASSIGN  = 'ail_wiring_assign_v1';  
+const LS_WIRING_ASSIGN='ail_wiring_assign_v1';
+// SUPABASE CONNECTION
+const SUPABASE_URL = "https://pfknkwjoxixgzdzznegr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBma25rd2pveGl4Z3pkenpuZWdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTI4ODYsImV4cCI6MjA5NDI2ODg4Nn0.W_ckuzV_0frebKvHgUqpPWuxxl-vWGOejDEEgXtpEHc";
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 function today(){return new Date().toISOString().slice(0,10);}
 function initials(n){if(!n)return'?';const p=n.trim().split(' ');return p.length>=2?(p[0][0]+p[1][0]).toUpperCase():n.substring(0,2).toUpperCase();}
 function selectClass(s){return s==='Completed'?'s-completed':s==='Running'?'s-running':'s-pending';}
