@@ -568,15 +568,48 @@ function loadData(){
     try{ wiringAssign=JSON.parse(localStorage.getItem(LS_WIRING_ASSIGN)||'{}'); }catch(e){ wiringAssign={}; }
   } catch(e){ projects=[]; changelog=[]; salespersons=[]; }
 }
-function saveData(){
+async function saveData(){
+
   try {
+
+    // LOCAL BACKUP
     localStorage.setItem(LS_PROJECTS, JSON.stringify(projects));
     localStorage.setItem(LS_CHANGELOG, JSON.stringify(changelog));
     localStorage.setItem(LS_SALESPERSONS, JSON.stringify(salespersons));
     localStorage.setItem(LS_CUSTOMERS, JSON.stringify(customers));
     localStorage.setItem(LS_WIRING_PERSONS, JSON.stringify(wiringPersons));
     localStorage.setItem(LS_WIRING_ASSIGN, JSON.stringify(wiringAssign));
-  } catch(e){ console.warn('Save failed',e); }
+
+    // CLOUD SAVE
+    const rows = Object.entries(wiringAssign).map(([project_no, a]) => ({
+      project_no,
+      person: a.person || '',
+      start_date: a.startDate || '',
+      end_date: a.endDate || '',
+      note: a.note || '',
+      updated_at: new Date()
+    }));
+
+    if(rows.length){
+
+      const { error } = await supabaseClient
+        .from('wiring_assignments')
+        .upsert(rows);
+
+      if(error){
+        console.error('Supabase Save Error:', error);
+      } else {
+        console.log('Cloud Sync Success');
+      }
+    }
+
+  } catch(e){
+
+    console.warn('Save failed', e);
+
+  }
+}
+  catch(e){ console.warn('Save failed',e); }
 }
 
 let projects=[];
