@@ -624,6 +624,24 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
       <select id="pipeline-cust-filter" onchange="refreshAll(false)" style="font-size:12px;padding:5px 10px;border-radius:7px;border:1.5px solid #E0C8D8;background:#fff;color:var(--text);outline:none;font-family:Inter,sans-serif;min-width:140px;cursor:pointer;">
         <option value="">All Customers</option>
       </select>
+      <label>Stage:</label>
+      <select id="pipeline-stage-filter" onchange="refreshAll(false)" style="font-size:12px;padding:5px 10px;border-radius:7px;border:1.5px solid #E0C8D8;background:#fff;color:var(--text);outline:none;font-family:Inter,sans-serif;min-width:130px;cursor:pointer;">
+        <option value="">All Stages</option>
+        <option value="engineering">Engineering</option>
+        <option value="purchase">Purchase</option>
+        <option value="fabrication">Fabrication</option>
+        <option value="wiring">Wiring</option>
+        <option value="testing">Testing</option>
+        <option value="dispatch">Dispatch</option>
+        <option value="installation">Installation / Commissioning</option>
+      </select>
+      <label>Status:</label>
+      <select id="pipeline-status-filter" onchange="refreshAll(false)" style="font-size:12px;padding:5px 10px;border-radius:7px;border:1.5px solid #E0C8D8;background:#fff;color:var(--text);outline:none;font-family:Inter,sans-serif;min-width:130px;cursor:pointer;">
+        <option value="">All Status</option>
+        <option value="Running">⚡ Running</option>
+        <option value="Pending">🕐 Pending</option>
+        <option value="Completed">✅ Completed</option>
+      </select>
     </div>
   </div>
   <div class="pipeline" id="pipeline-bars"></div>
@@ -686,6 +704,24 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
         <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">Cust:</span>
         <select id="proj-cust-filter" onchange="renderProjects()" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.5);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;min-width:120px;cursor:pointer;">
           <option value="">All</option>
+        </select>
+        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">Stage:</span>
+        <select id="proj-stage-filter" onchange="renderProjects()" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.5);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;min-width:120px;cursor:pointer;">
+          <option value="">All Stages</option>
+          <option value="engineering">Engineering</option>
+          <option value="purchase">Purchase</option>
+          <option value="fabrication">Fabrication</option>
+          <option value="wiring">Wiring</option>
+          <option value="testing">Testing</option>
+          <option value="dispatch">Dispatch</option>
+          <option value="installation">Installation / Comm.</option>
+        </select>
+        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">Status:</span>
+        <select id="proj-status-filter" onchange="renderProjects()" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.5);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;min-width:120px;cursor:pointer;">
+          <option value="">All Status</option>
+          <option value="Running">⚡ Running</option>
+          <option value="Pending">🕐 Pending</option>
+          <option value="Completed">✅ Completed</option>
         </select>
         <span id="proj-count-label" style="font-size:12px;color:var(--pink3);">0 Projects</span>
         <button class="pdf-btn" style="padding:5px 12px;font-size:12px;" onclick="exportProjectsPDF()">⬇ Export PDF</button>
@@ -819,6 +855,7 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
       <option value="Wiring">Wiring</option>
       <option value="Testing">Testing</option>
       <option value="Dispatch">Dispatch</option>
+      <option value="Installation / Commissioning">Installation / Commissioning</option>
     </select>
     <button class="cl-clr-btn" onclick="clearCLFilters()">✕ Clear Filters</button>
     <div class="cl-summary" id="cl-summary"></div>
@@ -867,8 +904,8 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
 <div class="toast" id="toast"></div>
 
 <script>
-const STAGES=['engineering','purchase','fabrication','wiring','testing','dispatch'];
-const STAGE_LABELS=['Engineering','Purchase','Fabrication','Wiring','Testing','Dispatch'];
+const STAGES=['engineering','purchase','fabrication','wiring','testing','dispatch','installation'];
+const STAGE_LABELS=['Engineering','Purchase','Fabrication','Wiring','Testing','Dispatch','Installation / Commissioning'];
 const STATUS_OPTS=['Pending','Running','Completed'];
 const STATUS_COLORS={Completed:'#1E9B6B',Running:'#E020A0',Pending:'#C0B8C0'};
 const LS_PROJECTS='ail_projects_v1';
@@ -909,6 +946,9 @@ async function loadData(){
     wiringPersons = Array.isArray(map[LS_WIRING_PERSONS])? map[LS_WIRING_PERSONS]: [];
     wiringAssign  = (map[LS_WIRING_ASSIGN] && typeof map[LS_WIRING_ASSIGN]==='object' && !Array.isArray(map[LS_WIRING_ASSIGN]))
                     ? map[LS_WIRING_ASSIGN] : {};
+    // ── MIGRATION: ensure every project has all current stages (safe for existing data) ──
+    const blankStage=()=>({status:'Pending',date:'',resp:'',remark:''});
+    projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); }); });
     setCloudStatus(true,'☁ Cloud connected');
   } catch(e){
     console.warn('Cloud load failed — using empty data',e);
@@ -979,6 +1019,8 @@ function renderProjects(){
   const chosenCust=custSel?custSel.value:'';
   const fromDate=fromEl?fromEl.value:'';
   const toDate=toEl?toEl.value:'';
+  const stageF=(document.getElementById('proj-stage-filter')||{}).value||'';
+  const statusF=(document.getElementById('proj-status-filter')||{}).value||'';
   let filtered=projects.filter(p=>{
     if(chosenSP && p.salesperson!==chosenSP) return false;
     if(chosenCust && p.customer!==chosenCust) return false;
@@ -990,6 +1032,10 @@ function renderProjects(){
       if(fromDate && latest<fromDate) return false;
       if(toDate && earliest>toDate) return false;
     }
+    // Stage + Status combo filter
+    if(stageF && statusF){ if(p[stageF]?.status!==statusF) return false; }
+    else if(stageF && !statusF){ /* show all — stage column will highlight */ }
+    else if(!stageF && statusF){ if(!STAGES.some(s=>p[s]?.status===statusF)) return false; }
     return true;
   });
 
@@ -1010,27 +1056,35 @@ function renderProjects(){
   let label=count+' Project'+(count!==1?'s':'');
   if(chosenSP) label+=' — '+chosenSP;
   if(chosenCust) label+=' · '+chosenCust;
+  if(stageF) label+=' · '+stageF.charAt(0).toUpperCase()+stageF.slice(1);
+  if(statusF) label+=' · '+statusF;
   document.getElementById('proj-count-label').textContent=label;
 
-  // Render sortable thead
+  // Render sortable thead — highlight filtered stage column
   const projCols=[
     {key:'no',label:'Project No'},{key:'po',label:'P.O. No'},{key:'customer',label:'Customer'},
     {key:'type',label:'Type'},{key:'priority',label:'Priority'},{key:'salesperson',label:'Salesperson'},
     {key:'engineering',label:'Engineering'},{key:'purchase',label:'Purchase'},{key:'fabrication',label:'Fabrication'},
-    {key:'wiring',label:'Wiring'},{key:'testing',label:'Testing'},{key:'dispatch',label:'Dispatch'}
+    {key:'wiring',label:'Wiring'},{key:'testing',label:'Testing'},{key:'dispatch',label:'Dispatch'},
+    {key:'installation',label:'Installation /<br>Commissioning',wrap:true}
   ];
   const projThead=document.getElementById('proj-thead');
   if(projThead) projThead.innerHTML='<tr>'+projCols.map(c=>{
     const cls=projSort.col===c.key?(projSort.dir===1?'asc':'desc'):'';
-    return `<th class="th-sort ${cls}" onclick="sortProjBy('${c.key}')">${c.label}<span class="sort-icon"></span></th>`;
+    const isHL=stageF&&c.key===stageF;
+    const styleParts=[];
+    if(isHL) styleParts.push('background:linear-gradient(180deg,#E020A0,#C8189A);box-shadow:0 0 0 2px #F040B8;');
+    if(c.wrap) styleParts.push('white-space:normal;text-align:center;min-width:95px;line-height:1.35;');
+    const styleAttr=styleParts.length?` style="${styleParts.join('')}"` :'';
+    return `<th class="th-sort ${cls}" onclick="sortProjBy('${c.key}')"${styleAttr}>${c.label}<span class="sort-icon"></span></th>`;
   }).join('')+'<th></th></tr>';
 
   if(!projects.length){
-    document.getElementById('proj-tbody').innerHTML=`<tr><td colspan="13"><div class="empty-state"><div class="empty-icon">📁</div>No projects yet — add your first project above</div></td></tr>`;
+    document.getElementById('proj-tbody').innerHTML=`<tr><td colspan="14"><div class="empty-state"><div class="empty-icon">📁</div>No projects yet — add your first project above</div></td></tr>`;
     return;
   }
   if(!filtered.length){
-    document.getElementById('proj-tbody').innerHTML=`<tr><td colspan="13"><div class="empty-state"><div class="empty-icon">🔍</div>No projects match the selected filters</div></td></tr>`;
+    document.getElementById('proj-tbody').innerHTML=`<tr><td colspan="14"><div class="empty-state"><div class="empty-icon">🔍</div>No projects match the selected filters</div></td></tr>`;
     return;
   }
   document.getElementById('proj-tbody').innerHTML=filtered.map((p,_fi)=>{
@@ -1118,7 +1172,7 @@ function addProject(){
   const blank=()=>({status:'Pending',date:'',resp:'',remark:''});
   projects.push({no,po,customer:cust,type,priority:pri,salesperson:sales,
     engineering:blank(),purchase:blank(),fabrication:blank(),
-    wiring:blank(),testing:blank(),dispatch:blank()});
+    wiring:blank(),testing:blank(),dispatch:blank(),installation:blank()});
   saveData();
   ['f-no','f-po','f-type'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-cust').value='';
@@ -1148,6 +1202,8 @@ function getFilteredProjects(){
   const custSel=document.getElementById('pipeline-cust-filter');
   const fromEl=document.getElementById('ov-date-from');
   const toEl=document.getElementById('ov-date-to');
+  const stageF=(document.getElementById('pipeline-stage-filter')||{}).value||'';
+  const statusF=(document.getElementById('pipeline-status-filter')||{}).value||'';
   const chosenSP=spSel?spSel.value:'';
   const chosenCust=custSel?custSel.value:'';
   const fromDate=fromEl?fromEl.value:'';
@@ -1163,16 +1219,24 @@ function getFilteredProjects(){
       if(fromDate && latest<fromDate) return false;
       if(toDate && earliest>toDate) return false;
     }
+    if(stageF && statusF){ if(p[stageF]?.status!==statusF) return false; }
+    else if(!stageF && statusF){ if(!STAGES.some(s=>p[s]?.status===statusF)) return false; }
     return true;
   });
 }
 function clearOvDates(){
   const f=document.getElementById('ov-date-from');const t=document.getElementById('ov-date-to');
-  if(f)f.value='';if(t)t.value='';refreshAll(false);
+  if(f)f.value='';if(t)t.value='';
+  const sg=document.getElementById('pipeline-stage-filter');const st=document.getElementById('pipeline-status-filter');
+  if(sg)sg.value='';if(st)st.value='';
+  refreshAll(false);
 }
 function clearProjDates(){
   const f=document.getElementById('proj-date-from');const t=document.getElementById('proj-date-to');
-  if(f)f.value='';if(t)t.value='';renderProjects();
+  if(f)f.value='';if(t)t.value='';
+  const sg=document.getElementById('proj-stage-filter');const st=document.getElementById('proj-status-filter');
+  if(sg)sg.value='';if(st)st.value='';
+  renderProjects();
 }
 
 function renderPipelineFilter(){
@@ -1413,18 +1477,53 @@ function clearCLFilters(){
 
 // ── EXPORT PROJECTS PDF ──
 function exportProjectsPDF(){
-  const spSelExp=document.getElementById('proj-sp-filter');
-  const chosenExp=spSelExp?spSelExp.value:'';
-  const exportProjects=chosenExp?projects.filter(p=>p.salesperson===chosenExp):projects;
-  if(!exportProjects.length){showToast('⚠ No projects to export');return;}
+  // Read all active filters from the Projects tab
+  const chosenSP  = (document.getElementById('proj-sp-filter')||{}).value||'';
+  const chosenCust= (document.getElementById('proj-cust-filter')||{}).value||'';
+  const fromDate  = (document.getElementById('proj-date-from')||{}).value||'';
+  const toDate    = (document.getElementById('proj-date-to')||{}).value||'';
+  const stageF    = (document.getElementById('proj-stage-filter')||{}).value||'';
+  const statusF   = (document.getElementById('proj-status-filter')||{}).value||'';
+
+  // Apply identical filtering logic as renderProjects()
+  const exportProjects = projects.filter(p=>{
+    if(chosenSP   && p.salesperson!==chosenSP)   return false;
+    if(chosenCust && p.customer!==chosenCust)     return false;
+    if(fromDate||toDate){
+      const dates=STAGES.map(s=>p[s].date).filter(Boolean);
+      if(!dates.length) return !fromDate;
+      const earliest=dates.reduce((a,b)=>a<b?a:b);
+      const latest  =dates.reduce((a,b)=>a>b?a:b);
+      if(fromDate && latest<fromDate)  return false;
+      if(toDate   && earliest>toDate)  return false;
+    }
+    if(stageF && statusF){ if(p[stageF]?.status!==statusF) return false; }
+    else if(!stageF && statusF){ if(!STAGES.some(s=>p[s]?.status===statusF)) return false; }
+    return true;
+  });
+
+  if(!exportProjects.length){showToast('⚠ No projects match the current filters');return;}
+
+  // Build filter description for PDF header
+  const filterParts=[];
+  if(chosenSP)   filterParts.push(`Salesperson: ${chosenSP}`);
+  if(chosenCust) filterParts.push(`Customer: ${chosenCust}`);
+  if(fromDate)   filterParts.push(`From: ${fromDate}`);
+  if(toDate)     filterParts.push(`To: ${toDate}`);
+  if(stageF)     filterParts.push(`Stage: ${stageF.charAt(0).toUpperCase()+stageF.slice(1)}`);
+  if(statusF)    filterParts.push(`Status: ${statusF}`);
+  const filterDesc = filterParts.length ? filterParts.join(' · ') : 'All Projects (No Filters)';
 
   const stageRows = exportProjects.map(p => {
     const stageCells = STAGES.map(s => {
       const st = p[s];
+      const isHighlighted = stageF===s && statusF===st.status;
       const statusColor = st.status==='Completed'?'#0C5E41':st.status==='Running'?'#8B0060':'#5A5A5A';
-      const bgColor = st.status==='Completed'?'#D4F5EA':st.status==='Running'?'#FCD8F0':'#F3F3F0';
-      return `<td style="vertical-align:top;padding:6px 8px;border:1px solid #EADDF0;min-width:110px;">
-        <div style="display:inline-block;background:${bgColor};color:${statusColor};border-radius:12px;padding:2px 8px;font-size:10px;font-weight:700;margin-bottom:3px;">${st.status}</div>
+      const bgColor = isHighlighted?'#F040B8':st.status==='Completed'?'#D4F5EA':st.status==='Running'?'#FCD8F0':'#F3F3F0';
+      const txtColor = isHighlighted?'#fff':statusColor;
+      const cellBg = isHighlighted?'#FFF0FC':'';
+      return `<td style="vertical-align:top;padding:6px 8px;border:1px solid #EADDF0;min-width:110px;${cellBg?'background:'+cellBg+';':''}">
+        <div style="display:inline-block;background:${bgColor};color:${txtColor};border-radius:12px;padding:2px 8px;font-size:10px;font-weight:700;margin-bottom:3px;">${st.status}</div>
         ${st.date?`<div style="font-size:9px;color:#7A7A8A;margin-bottom:2px;">📅 ${st.date}</div>`:''}
         ${st.resp?`<div style="font-size:9px;color:#1A1A2E;margin-bottom:2px;">👤 ${st.resp}</div>`:''}
         ${st.remark?`<div style="font-size:9px;color:#7A7A8A;font-style:italic;">"${st.remark}"</div>`:''}
@@ -1455,17 +1554,25 @@ function exportProjectsPDF(){
     else totalPend++;
   }));
 
+  // Stage header cells — highlight filtered stage
+  const stageHeaders = STAGES.map((s,i)=>{
+    const isHL=stageF===s;
+    return `<th class="stage-th"${isHL?' style="background:#C8189A;border-bottom:3px solid #F040B8;"':''}>${STAGE_LABELS[i]}${isHL&&statusF?' ('+statusF+')':''}</th>`;
+  }).join('');
+
   const html = `<!DOCTYPE html>
 <html><head><meta charset="UTF-8">
 <title>AIL Projects Report</title>
 <style>
   @page { size: A3 landscape; margin: 15mm; }
   body { font-family: Arial, sans-serif; color: #1A1A2E; margin: 0; padding: 0; }
-  .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #E020A0; padding-bottom: 10px; margin-bottom: 18px; }
+  .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #E020A0; padding-bottom: 10px; margin-bottom: 14px; }
   .company { font-size: 22px; font-weight: 900; color: #E020A0; letter-spacing: 0.5px; }
   .subtitle { font-size: 11px; color: #7A7A8A; margin-top: 3px; }
   .meta { text-align: right; font-size: 11px; color: #7A7A8A; }
   .meta strong { color: #1A1A2E; }
+  .filter-bar { background: #F8F0FC; border: 1px solid #E8C8E0; border-radius: 6px; padding: 8px 14px; margin-bottom: 14px; font-size: 11px; color: #5A0040; }
+  .filter-bar strong { color: #E020A0; }
   .summary { display: flex; gap: 12px; margin-bottom: 16px; }
   .sum-card { flex: 1; border-radius: 8px; padding: 10px 14px; border-left: 4px solid; }
   .sum-card .val { font-size: 24px; font-weight: 900; }
@@ -1485,14 +1592,18 @@ function exportProjectsPDF(){
   </div>
   <div class="meta">
     <div>Generated: <strong>${new Date().toLocaleString()}</strong></div>
-    <div>Total Projects: <strong>${exportProjects.length}</strong>${chosenExp?` (Salesperson: <strong>${chosenExp}</strong>)`:''}</div>
+    <div>Filtered Projects: <strong>${exportProjects.length}</strong> of <strong>${projects.length}</strong> total</div>
   </div>
+</div>
+
+<div class="filter-bar">
+  📊 <strong>Active Filters:</strong> ${filterDesc}
 </div>
 
 <div class="summary">
   <div class="sum-card" style="background:#FEF0F8;border-color:#E020A0;">
     <div class="val" style="color:#E020A0;">${exportProjects.length}</div>
-    <div class="lbl" style="color:#E020A0;">Total Projects</div>
+    <div class="lbl" style="color:#E020A0;">Filtered Projects</div>
   </div>
   <div class="sum-card" style="background:#D4F5EA;border-color:#1E9B6B;">
     <div class="val" style="color:#1E9B6B;">${totalComp}</div>
@@ -1521,12 +1632,7 @@ function exportProjectsPDF(){
       <th>Type</th>
       <th>Priority</th>
       <th>Salesperson</th>
-      <th class="stage-th">Engineering</th>
-      <th class="stage-th">Purchase</th>
-      <th class="stage-th">Fabrication</th>
-      <th class="stage-th">Wiring</th>
-      <th class="stage-th">Testing</th>
-      <th class="stage-th">Dispatch</th>
+      ${stageHeaders}
     </tr>
   </thead>
   <tbody>${stageRows}</tbody>
@@ -1534,7 +1640,7 @@ function exportProjectsPDF(){
 
 <div class="footer">
   <span>Aditya Industech Ltd. · MSME: UDYAM-GJ-22-0006997 · CIN: U29113GJ2009PLC057964</span>
-  <span>Leading The Automation Age · Confidential Document</span>
+  <span>Leading The Automation Age · Confidential Document · Filters Applied: ${filterDesc}</span>
 </div>
 
 </body></html>`;
@@ -1543,10 +1649,11 @@ function exportProjectsPDF(){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `AIL_Projects_Report${chosenExp?'_'+chosenExp.replace(/ /g,'_'):''}_${today()}.html`;
+  const sfx=[chosenSP?'SP_'+chosenSP.replace(/ /g,'_'):'',stageF?stageF:'',statusF?statusF:''].filter(Boolean).join('_');
+  a.download = `AIL_Projects_Report${sfx?'_'+sfx:''}_${today()}.html`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('✓ Projects report exported');
+  showToast('✓ Filtered report exported — '+exportProjects.length+' project(s)');
 }
 
 // ── EXPORT CHANGELOG PDF ──
