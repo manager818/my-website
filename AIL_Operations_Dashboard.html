@@ -290,12 +290,58 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
 
 /* ── LAYOUT ── */
 .body-wrap{padding:20px 24px;}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px;}
 .metric{background:var(--surface);border-radius:var(--radius);padding:14px 16px;border:1px solid var(--border);border-left:4px solid var(--pink);box-shadow:var(--shadow);transition:background .25s,border-color .25s;}
 .metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-weight:600;}
 .metric-val{font-size:30px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--black);}
 .metric-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .metric-val.green{color:var(--green);}.metric-val.amber{color:var(--pink);}.metric-val.blue{color:var(--blue);}
+.metric-val.red{color:#D03020;}.metric-val.orange{color:#D07010;}
+.metric-trend{font-size:10px;font-weight:700;margin-top:3px;display:flex;align-items:center;gap:4px;}
+.metric-trend.up{color:#1E9B6B;}.metric-trend.down{color:#D03020;}.metric-trend.neutral{color:var(--muted);}
+
+/* ── DECISION INTELLIGENCE PANEL ── */
+.decision-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;}
+.decision-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.decision-card-head{padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:7px;}
+.decision-card-head.red{background:#FDE8E0;color:#A02010;border-bottom:1px solid #F5B8A8;}
+html[data-theme="dark"] .decision-card-head.red{background:#3A1010;color:#FF8870;border-bottom-color:#7A2810;}
+.decision-card-head.amber{background:#FEF0D4;color:#8A5000;border-bottom:1px solid #F5CC80;}
+html[data-theme="dark"] .decision-card-head.amber{background:#302010;color:#FFB84A;border-bottom-color:#704810;}
+.decision-card-head.green{background:#D4F5EA;color:#0C5E41;border-bottom:1px solid #A8E6CE;}
+html[data-theme="dark"] .decision-card-head.green{background:#0C3028;color:#40D4A0;border-bottom-color:#1A6048;}
+.decision-card-body{padding:0;}
+.decision-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);transition:background .15s;}
+.decision-item:last-child{border-bottom:none;}
+.decision-item:hover{background:var(--hover-row);}
+.decision-item-icon{font-size:15px;line-height:1;margin-top:1px;flex-shrink:0;}
+.decision-item-main{flex:1;min-width:0;}
+.decision-item-proj{font-size:12px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--dark);letter-spacing:.02em;}
+.decision-item-detail{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.decision-item-badge{flex-shrink:0;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;align-self:flex-start;}
+.badge-red{background:#FDE8E0;color:#A02010;border:1px solid #F5B8A8;}
+html[data-theme="dark"] .badge-red{background:#3A1010;color:#FF8870;border-color:#7A2810;}
+.badge-amber{background:#FEF0D4;color:#8A5000;border:1px solid #F5CC80;}
+html[data-theme="dark"] .badge-amber{background:#302010;color:#FFB84A;border-color:#704810;}
+.badge-green{background:#D4F5EA;color:#0C5E41;border:1px solid #A8E6CE;}
+html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-color:#1A6048;}
+.badge-pink{background:var(--pink-pale);color:var(--pink);border:1px solid var(--add-panel-border);}
+.decision-empty{padding:18px 14px;text-align:center;font-size:12px;color:var(--muted);font-style:italic;}
+
+/* ── STAGE HEALTH MATRIX ── */
+.stage-health-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px;}
+.sh-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 10px;box-shadow:var(--shadow);text-align:center;transition:background .25s,border-color .25s;}
+.sh-card:hover{border-color:var(--pink);box-shadow:var(--shadow-lg);}
+.sh-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px;}
+.sh-bar-track{height:6px;border-radius:3px;background:var(--surface3);margin:6px 0;overflow:hidden;}
+.sh-bar-fill{height:100%;border-radius:3px;transition:width .4s ease;}
+.sh-pct{font-size:18px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--dark);}
+.sh-counts{display:flex;justify-content:center;gap:6px;margin-top:5px;flex-wrap:wrap;}
+.sh-count-chip{font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;}
+.sh-run-chip{background:var(--stage-running-bg);color:var(--stage-running-txt);}
+.sh-pend-chip{background:var(--stage-pending-bg);color:var(--muted);}
+.sh-done-chip{background:var(--stage-done-bg);color:var(--green);}
+.sh-status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;}
 
 /* ── PIPELINE ── */
 .section-title{font-size:10px;font-weight:700;color:var(--pink);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px;}
@@ -568,6 +614,18 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
 [style*="display:flex"] > .ss-wrapper,
 [style*="display: flex"] > .ss-wrapper { flex: 1; min-width: 0; }
 
+/* ── RESPONSIVE — smart overview panels ── */
+@media(max-width:1200px){
+  .metrics{grid-template-columns:repeat(3,1fr);}
+  .stage-health-grid{grid-template-columns:repeat(4,1fr);}
+  .decision-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:800px){
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .stage-health-grid{grid-template-columns:repeat(3,1fr);}
+  .decision-grid{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -604,9 +662,11 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
 <div id="tab-overview" class="panel active">
   <div class="metrics">
     <div class="metric"><div class="metric-label">Total Projects</div><div class="metric-val" id="m-total">0</div><div class="metric-sub">Active pipeline</div></div>
-    <div class="metric"><div class="metric-label">Completed Stages</div><div class="metric-val green" id="m-comp">0</div><div class="metric-sub">Across all projects</div></div>
+    <div class="metric"><div class="metric-label">Completion Rate</div><div class="metric-val green" id="m-pct">0%</div><div class="metric-sub" id="m-pct-sub">Stage completion</div></div>
+    <div class="metric"><div class="metric-label">Stages Done</div><div class="metric-val green" id="m-comp">0</div><div class="metric-sub">Across all projects</div></div>
+    <div class="metric"><div class="metric-label">In Progress</div><div class="metric-val blue" id="m-run">0</div><div class="metric-sub">Running right now</div></div>
     <div class="metric"><div class="metric-label">High Priority</div><div class="metric-val amber" id="m-high">0</div><div class="metric-sub">Needs attention</div></div>
-    <div class="metric"><div class="metric-label">In Progress</div><div class="metric-val blue" id="m-run">0</div><div class="metric-sub">Running stages</div></div>
+    <div class="metric"><div class="metric-label">At Risk</div><div class="metric-val red" id="m-risk">0</div><div class="metric-sub" id="m-risk-sub">Overdue or stuck</div></div>
   </div>
   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
     <div class="section-title" style="margin-bottom:0;align-self:center;">Stage Completion Pipeline</div>
@@ -645,6 +705,28 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
     </div>
   </div>
   <div class="pipeline" id="pipeline-bars"></div>
+
+  <!-- ── STAGE HEALTH MATRIX ── -->
+  <div class="section-title" style="margin-bottom:10px;margin-top:4px;">Stage Health Matrix</div>
+  <div class="stage-health-grid" id="stage-health-grid"></div>
+
+  <!-- ── DECISION INTELLIGENCE PANEL ── -->
+  <div class="section-title" style="margin-bottom:10px;">Decision Intelligence — Action Required</div>
+  <div class="decision-grid" id="decision-grid">
+    <div class="decision-card">
+      <div class="decision-card-head red">🚨 Overdue &amp; Stuck</div>
+      <div class="decision-card-body" id="di-overdue"></div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-card-head amber">⏰ Upcoming Deadlines (7 days)</div>
+      <div class="decision-card-body" id="di-upcoming"></div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-card-head green">✅ Recently Completed</div>
+      <div class="decision-card-body" id="di-completed"></div>
+    </div>
+  </div>
+
   <div class="bottom-grid">
     <div>
       <div class="section-title">Recent Activity</div>
@@ -1185,15 +1267,31 @@ function addProject(){
 // ── METRICS ──
 function renderMetrics(){
   const filtered=getFilteredProjects();
-  let comp=0,run=0;
-  filtered.forEach(p=>STAGES.forEach(s=>{
-    if(p[s].status==='Completed')comp++;
-    if(p[s].status==='Running')run++;
-  }));
+  const todayStr=today();
+  let comp=0,run=0,totalStages=0,overdue=0,stuck=0;
+  filtered.forEach(p=>{
+    let hasRunning=false;
+    STAGES.forEach(s=>{
+      totalStages++;
+      if(p[s].status==='Completed')comp++;
+      if(p[s].status==='Running'){run++;hasRunning=true;
+        if(p[s].date && p[s].date<todayStr) overdue++;
+      }
+    });
+    if(p.priority==='High'&&!hasRunning) stuck++;
+  });
+  const pct=totalStages>0?Math.round(comp/totalStages*100):0;
+  const risk=overdue+stuck;
   document.getElementById('m-total').textContent=filtered.length;
   document.getElementById('m-comp').textContent=comp;
   document.getElementById('m-high').textContent=filtered.filter(p=>p.priority==='High').length;
   document.getElementById('m-run').textContent=run;
+  document.getElementById('m-pct').textContent=pct+'%';
+  document.getElementById('m-pct').className='metric-val '+(pct>=75?'green':pct>=40?'blue':'amber');
+  document.getElementById('m-pct-sub').textContent=comp+' of '+totalStages+' stages done';
+  document.getElementById('m-risk').textContent=risk;
+  document.getElementById('m-risk').className='metric-val '+(risk===0?'green':risk<=3?'orange':'red');
+  document.getElementById('m-risk-sub').textContent=overdue+' overdue · '+stuck+' HP stuck';
 }
 
 // ── PIPELINE ──
@@ -1300,7 +1398,116 @@ function renderDonut(){
   document.getElementById('donut-legend').innerHTML=Object.entries(counts).map(([k,v])=>`<div class="legend-item"><div class="legend-dot" style="background:${cols[k]};"></div><strong>${v}</strong>&nbsp;${k}</div>`).join('');
 }
 
-// ── SALESPERSON ──
+// ── STAGE HEALTH MATRIX ──
+function renderStageHealth(){
+  const filtered=getFilteredProjects();
+  const total=filtered.length||1;
+  const wrap=document.getElementById('stage-health-grid');
+  if(!wrap)return;
+  wrap.innerHTML=STAGES.map((s,i)=>{
+    const comp=filtered.filter(p=>p[s].status==='Completed').length;
+    const run=filtered.filter(p=>p[s].status==='Running').length;
+    const pend=filtered.filter(p=>p[s].status==='Pending').length;
+    const pct=Math.round(comp/total*100);
+    const barColor=pct===100?'#1E9B6B':run>0?'#E020A0':'#C0B8C0';
+    const label=STAGE_LABELS[i];
+    const short=label.length>8?label.substring(0,8)+'…':label;
+    return `<div class="sh-card" title="${label}: ${pct}% complete">
+      <div class="sh-label">${short}</div>
+      <div class="sh-pct" style="color:${pct>=75?'#1E9B6B':pct>=40?'#1A6BC4':'#7A7080'}">${pct}%</div>
+      <div class="sh-bar-track"><div class="sh-bar-fill" style="width:${pct}%;background:${barColor};"></div></div>
+      <div class="sh-counts">
+        <span class="sh-count-chip sh-done-chip" title="Completed">✓${comp}</span>
+        ${run>0?`<span class="sh-count-chip sh-run-chip" title="Running">⚡${run}</span>`:''}
+        ${pend>0?`<span class="sh-count-chip sh-pend-chip" title="Pending">·${pend}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── DECISION INTELLIGENCE PANEL ──
+function renderDecisionPanel(){
+  const filtered=getFilteredProjects();
+  const todayStr=today();
+  const in7=new Date();in7.setDate(in7.getDate()+7);
+  const in7Str=in7.toISOString().slice(0,10);
+
+  // 1. Overdue & Stuck
+  const overdueItems=[];
+  const stuckItems=[];
+  filtered.forEach(p=>{
+    let hasRunning=false;
+    STAGES.forEach((s,i)=>{
+      if(p[s].status==='Running'){hasRunning=true;
+        if(p[s].date && p[s].date<todayStr){
+          const daysOver=Math.round((new Date(todayStr)-new Date(p[s].date))/(1000*60*60*24));
+          overdueItems.push({proj:p.no,stage:STAGE_LABELS[i],date:p[s].date,resp:p[s].resp,daysOver,priority:p.priority,customer:p.customer});
+        }
+      }
+    });
+    if(p.priority==='High'&&!hasRunning){
+      const firstPend=STAGES.findIndex(s=>p[s].status==='Pending');
+      if(firstPend>=0) stuckItems.push({proj:p.no,stage:STAGE_LABELS[firstPend],customer:p.customer});
+    }
+  });
+  overdueItems.sort((a,b)=>b.daysOver-a.daysOver);
+  const allOverdue=[...overdueItems,...stuckItems];
+  const elOver=document.getElementById('di-overdue');
+  if(elOver){
+    if(!allOverdue.length){
+      elOver.innerHTML='<div class="decision-empty">🟢 No overdue or stuck projects</div>';
+    } else {
+      elOver.innerHTML=allOverdue.slice(0,5).map(it=>{
+        if(it.daysOver!=null){
+          return `<div class="decision-item"><div class="decision-item-icon">🔴</div><div class="decision-item-main"><div class="decision-item-proj">${it.proj} · ${it.stage}</div><div class="decision-item-detail">${it.customer||''}${it.resp?' · '+it.resp:''} · Due: ${it.date}</div></div><span class="decision-item-badge badge-red">+${it.daysOver}d</span></div>`;
+        } else {
+          return `<div class="decision-item"><div class="decision-item-icon">⚠️</div><div class="decision-item-main"><div class="decision-item-proj">${it.proj} · High Priority</div><div class="decision-item-detail">${it.customer||''} · Stuck at ${it.stage}</div></div><span class="decision-item-badge badge-amber">HP Stuck</span></div>`;
+        }
+      }).join('')+(allOverdue.length>5?`<div class="decision-empty">+${allOverdue.length-5} more items</div>`:'');
+    }
+  }
+
+  // 2. Upcoming Deadlines (next 7 days, not completed)
+  const upcoming=[];
+  filtered.forEach(p=>{
+    STAGES.forEach((s,i)=>{
+      if(p[s].status!=='Completed'&&p[s].date&&p[s].date>=todayStr&&p[s].date<=in7Str){
+        const daysLeft=Math.round((new Date(p[s].date)-new Date(todayStr))/(1000*60*60*24));
+        upcoming.push({proj:p.no,stage:STAGE_LABELS[i],date:p[s].date,resp:p[s].resp,daysLeft,status:p[s].status,priority:p.priority,customer:p.customer});
+      }
+    });
+  });
+  upcoming.sort((a,b)=>a.daysLeft-b.daysLeft);
+  const elUp=document.getElementById('di-upcoming');
+  if(elUp){
+    if(!upcoming.length){
+      elUp.innerHTML='<div class="decision-empty">📭 No deadlines in next 7 days</div>';
+    } else {
+      elUp.innerHTML=upcoming.slice(0,5).map(it=>`<div class="decision-item"><div class="decision-item-icon">${it.daysLeft===0?'🔔':it.daysLeft<=3?'⏰':'📅'}</div><div class="decision-item-main"><div class="decision-item-proj">${it.proj} · ${it.stage}</div><div class="decision-item-detail">${it.customer||''}${it.resp?' · '+it.resp:''} · Due: ${it.date}</div></div><span class="decision-item-badge ${it.daysLeft<=2?'badge-red':it.daysLeft<=4?'badge-amber':'badge-pink'}">${it.daysLeft===0?'Today':it.daysLeft+'d left'}</span></div>`).join('')+(upcoming.length>5?`<div class="decision-empty">+${upcoming.length-5} more</div>`:'');
+    }
+  }
+
+  // 3. Recently Completed (last 7 days)
+  const recent=[];
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
+  const cutoffStr=cutoff.toISOString().slice(0,10);
+  filtered.forEach(p=>{
+    STAGES.forEach((s,i)=>{
+      if(p[s].status==='Completed'&&p[s].date&&p[s].date>=cutoffStr){
+        recent.push({proj:p.no,stage:STAGE_LABELS[i],date:p[s].date,resp:p[s].resp,customer:p.customer});
+      }
+    });
+  });
+  recent.sort((a,b)=>b.date.localeCompare(a.date));
+  const elComp=document.getElementById('di-completed');
+  if(elComp){
+    if(!recent.length){
+      elComp.innerHTML='<div class="decision-empty">No completions in last 7 days</div>';
+    } else {
+      elComp.innerHTML=recent.slice(0,5).map(it=>`<div class="decision-item"><div class="decision-item-icon">✅</div><div class="decision-item-main"><div class="decision-item-proj">${it.proj} · ${it.stage}</div><div class="decision-item-detail">${it.customer||''}${it.resp?' · '+it.resp:''}</div></div><span class="decision-item-badge badge-green">${it.date}</span></div>`).join('')+(recent.length>5?`<div class="decision-empty">+${recent.length-5} more</div>`:'');
+    }
+  }
+}
 function renderSalesperson(){
   const wrap=document.getElementById('sales-wrap');
   if(!projects.length){wrap.innerHTML='<div class="empty-state"><div class="empty-icon">👤</div>No projects added yet</div>';return;}
@@ -2020,7 +2227,7 @@ function showTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
   // Re-render the activated tab so it always shows fresh data
-  if(name==='overview')  { renderMetrics();renderPipeline();renderFeed();renderDonut(); }
+  if(name==='overview')  { renderMetrics();renderPipeline();renderFeed();renderDonut();renderStageHealth();renderDecisionPanel(); }
   if(name==='projects')  { renderProjFilter();renderProjects(); }
   if(name==='salesperson'){ renderSalesperson(); }
   if(name==='wiring')    { renderWiringPersonList();renderWiringPlanner(); }
@@ -2031,7 +2238,7 @@ function showTab(name,btn){
 function refreshAll(rerenderTable=true){
   renderPipelineFilter();
   renderProjFilter();
-  renderMetrics();renderPipeline();renderFeed();renderDonut();renderChangelog();renderSalesperson();renderWiringPlanner();
+  renderMetrics();renderPipeline();renderFeed();renderDonut();renderStageHealth();renderDecisionPanel();renderChangelog();renderSalesperson();renderWiringPlanner();
   if(rerenderTable)renderProjects();
 }
 
