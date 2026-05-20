@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIL Operations — Secure Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg:        #0a0d14;
+      --surface:   #111827;
+      --border:    #1f2d42;
+      --accent:    #f97316;
+      --accent2:   #fb923c;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --success:   #22c55e;
+      --error:     #ef4444;
+      --input-bg:  #0d1624;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ── BACKGROUND GRID ─────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(249,115,22,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(249,115,22,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    /* ── GLOWING ORBS ────────────────────────────── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .orb-1 { width:420px; height:420px; background:rgba(249,115,22,.10); top:-120px; left:-80px; animation-delay:0s; }
+    .orb-2 { width:340px; height:340px; background:rgba(30,58,100,.25); bottom:-80px; right:-60px; animation-delay:-6s; }
+    @keyframes drift { from{transform:translate(0,0)} to{transform:translate(30px,20px)} }
+
+    /* ── CARD ────────────────────────────────────── */
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 48px 44px 40px;
+      box-shadow: 0 0 0 1px rgba(249,115,22,.06), 0 32px 80px rgba(0,0,0,.55);
+      animation: slideUp .55s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes slideUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+
+    /* corner accents */
+    .card::before, .card::after {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      border-color: var(--accent);
+      border-style: solid;
+    }
+    .card::before { top:-1px; left:-1px; border-width: 2px 0 0 2px; }
+    .card::after  { bottom:-1px; right:-1px; border-width: 0 2px 2px 0; }
+
+    /* ── LOGO AREA ───────────────────────────────── */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      border: 2px solid var(--accent);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width:18px; height:18px; fill:var(--accent); }
+    .logo-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--text);
+    }
+    .logo-name span { color: var(--accent); }
+    .tagline {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      letter-spacing: .12em;
+      margin-bottom: 32px;
+    }
+
+    /* ── TABS ────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+    .tab {
+      flex: 1;
+      padding: 8px 0;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all .22s;
+    }
+    .tab.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .tab:not(.active):hover { color: var(--text); }
+
+    /* ── PANELS ──────────────────────────────────── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── FORM ELEMENTS ───────────────────────────── */
+    .field {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+    }
+    input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(249,115,22,.14);
+    }
+    input::placeholder { color: var(--muted); opacity: .6; }
+
+    /* ── ROLE SELECT ─────────────────────────────── */
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color .2s;
+      appearance: none;
+    }
+    select:focus { border-color: var(--accent); }
+
+    /* ── BUTTON ──────────────────────────────────── */
+    .btn {
+      width: 100%;
+      padding: 13px;
+      margin-top: 6px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .2s, transform .12s, box-shadow .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn:hover {
+      background: var(--accent2);
+      box-shadow: 0 0 24px rgba(249,115,22,.35);
+    }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* spinner inside btn */
+    .btn .spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto;
+    }
+    .btn.loading .btn-text { display: none; }
+    .btn.loading .spinner { display: block; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* ── ALERT ───────────────────────────────────── */
+    .alert {
+      display: none;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 3px;
+      font-size: 13px;
+      font-family: 'DM Mono', monospace;
+      border-left: 3px solid;
+    }
+    .alert.show { display: block; }
+    .alert.success { background:rgba(34,197,94,.08); border-color:var(--success); color:var(--success); }
+    .alert.error   { background:rgba(239,68,68,.08);  border-color:var(--error);   color:var(--error);   }
+
+    /* ── DIVIDER ─────────────────────────────────── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: .08em;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── INFO BADGE ──────────────────────────────── */
+    .info-note {
+      margin-top: 20px;
+      padding: 10px 12px;
+      background: rgba(249,115,22,.06);
+      border: 1px solid rgba(249,115,22,.18);
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .info-note strong { color: var(--accent); }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    .footer-text {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      letter-spacing: .06em;
+    }
+    .footer-text span { color: var(--accent); }
+
+    /* ── PASSWORD STRENGTH ───────────────────────── */
+    .strength-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .strength-bar span {
+      flex: 1; height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      transition: background .3s;
+    }
+    .strength-bar.s1 span:nth-child(1) { background: var(--error); }
+    .strength-bar.s2 span:nth-child(-n+2) { background: #f59e0b; }
+    .strength-bar.s3 span:nth-child(-n+3) { background: #3b82f6; }
+    .strength-bar.s4 span { background: var(--success); }
+  </style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="card">
+
+  <div class="logo-row">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L20 8.5v7L12 19.82 4 15.5v-7L12 4.18z"/>
+      </svg>
+    </div>
+    <div class="logo-name">AIL <span>OPS</span></div>
+  </div>
+  <div class="tagline">ADITYA INDUSTECH LTD. — OPERATIONS PORTAL</div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('login')">Sign In</button>
+    <button class="tab" onclick="switchTab('create')">Create User</button>
+    <button class="tab" onclick="switchTab('update')">Update Password</button>
+  </div>
+
+  <!-- ══ PANEL: SIGN IN ════════════════════════════ -->
+  <div class="panel active" id="panel-login">
+    <div class="field">
+      <label>Email Address</label>
+      <input type="email" id="login-email" placeholder="user@ailops.in" autocomplete="email" />
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn" id="btn-login" onclick="doLogin()">
+      <span class="btn-text">ACCESS DASHBOARD</span>
+      <div class="spinner"></div>
+    </button>
+    <div class="alert" id="alert-login"></div>
+  </div>
+
+  <!-- ══ PANEL: CREATE USER ════════════════════════ -->
+  <div class="panel" id="panel-create">
+    <div class="info-note">
+      <strong>Admin only.</strong> New users receive a confirmation email. Ensure your Supabase project has email auth enabled.
+    </div>
+
+    <div class="divider">new account</div>
+
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" id="create-name" placeholder="Rajesh Kumar" />
+    </div>
+    <div class="field">
+      <label>Email Address</label>
+      <input type="email" id="create-email" placeholder="newuser@ailops.in" />
+    </div>
+    <div class="field">
+      <label>Role</label>
+      <select id="create-role">
+        <option value="viewer">Viewer</option>
+        <option value="operator">Operator</option>
+        <option value="manager">Manager</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Temporary Password</label>
+      <input type="password" id="create-pass" placeholder="Min. 8 characters"
+             oninput="checkStrength(this.value,'create-strength')" />
+      <div class="strength-bar" id="create-strength">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Confirm Password</label>
+      <input type="password" id="create-pass2" placeholder="Repeat password" />
+    </div>
+    <button class="btn" id="btn-create" onclick="doCreate()">
+      <span class="btn-text">CREATE USER ACCOUNT</span>
+      <div class="spinner"></div>
+    </button>
+    <div class="alert" id="alert-create"></div>
+  </div>
+
+  <!-- ══ PANEL: UPDATE PASSWORD ════════════════════ -->
+  <div class="panel" id="panel-update">
+    <div class="info-note">
+      Sign in first, then update your password here — or use this after clicking an email reset link.
+    </div>
+
+    <div class="divider">change credentials</div>
+
+    <div class="field">
+      <label>Current Email</label>
+      <input type="email" id="update-email" placeholder="your@email.com" />
+    </div>
+    <div class="field">
+      <label>Current Password</label>
+      <input type="password" id="update-old-pass" placeholder="Current password" />
+    </div>
+    <div class="field">
+      <label>New Password</label>
+      <input type="password" id="update-new-pass" placeholder="New password"
+             oninput="checkStrength(this.value,'update-strength')" />
+      <div class="strength-bar" id="update-strength">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Confirm New Password</label>
+      <input type="password" id="update-new-pass2" placeholder="Repeat new password" />
+    </div>
+    <button class="btn" id="btn-update" onclick="doUpdate()">
+      <span class="btn-text">UPDATE PASSWORD</span>
+      <div class="spinner"></div>
+    </button>
+    <div class="alert" id="alert-update"></div>
+
+    <div style="margin-top:18px; text-align:center;">
+      <button onclick="doForgot()" style="background:none;border:none;color:var(--muted);
+        font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;
+        text-decoration:underline;text-underline-offset:3px;"
+        id="btn-forgot">
+        Send password reset email instead
+      </button>
+    </div>
+  </div>
+
+  <div class="footer-text">
+    Secured by <span>Supabase Auth</span> · AIL Operations v2.0
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+//  ⚙️  CONFIGURATION — FILL IN YOUR VALUES BELOW
+// ════════════════════════════════════════════════
+const SUPABASE_URL  = 'https://pfknkwjoxixgzdzznegr.supabase.co';   // ← replace
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBma25rd2pveGl4Z3pkenpuZWdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTI4ODYsImV4cCI6MjA5NDI2ODg4Nn0.W_ckuzV_0frebKvHgUqpPWuxxl-vWGOejDEEgXtpEHc';                  // ← replace
+const DASHBOARD_URL = 'AIL_Operations_Dashboard.html';         // ← your dashboard file name
+// ════════════════════════════════════════════════
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── Auto-redirect if already logged in ───────────
+window.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) window.location.href = DASHBOARD_URL;
+
+  // Handle password-reset deep link (email link returns with hash)
+  const hash = window.location.hash;
+  if (hash.includes('type=recovery')) {
+    switchTab('update');
+    showAlert('update', 'success', 'Password reset link verified. Enter your new password below.');
+  }
+});
+
+// ── Tab switching ─────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['login','create','update'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  clearAlerts();
+}
+
+// ── Helpers ───────────────────────────────────────
+function setLoading(btnId, state) {
+  const btn = document.getElementById(btnId);
+  btn.classList.toggle('loading', state);
+  btn.disabled = state;
+}
+function showAlert(panel, type, msg) {
+  const el = document.getElementById('alert-' + panel);
+  el.textContent = msg;
+  el.className = 'alert show ' + type;
+}
+function clearAlerts() {
+  document.querySelectorAll('.alert').forEach(a => a.className = 'alert');
+}
+function checkStrength(val, barId) {
+  const bar = document.getElementById(barId);
+  let score = 0;
+  if (val.length >= 8)           score++;
+  if (/[A-Z]/.test(val))         score++;
+  if (/[0-9]/.test(val))         score++;
+  if (/[^A-Za-z0-9]/.test(val))  score++;
+  bar.className = 'strength-bar' + (score ? ' s' + score : '');
+}
+
+// ── SIGN IN ───────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  if (!email || !pass) { showAlert('login','error','Please fill in both fields.'); return; }
+
+  setLoading('btn-login', true);
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  setLoading('btn-login', false);
+
+  if (error) { showAlert('login','error', '✗ ' + error.message); return; }
+  showAlert('login','success','✓ Authenticated. Redirecting…');
+  setTimeout(() => window.location.href = DASHBOARD_URL, 800);
+}
+
+// ── CREATE USER ───────────────────────────────────
+async function doCreate() {
+  const name  = document.getElementById('create-name').value.trim();
+  const email = document.getElementById('create-email').value.trim();
+  const role  = document.getElementById('create-role').value;
+  const pass  = document.getElementById('create-pass').value;
+  const pass2 = document.getElementById('create-pass2').value;
+
+  if (!name || !email || !pass) { showAlert('create','error','All fields are required.'); return; }
+  if (pass !== pass2)           { showAlert('create','error','Passwords do not match.'); return; }
+  if (pass.length < 8)          { showAlert('create','error','Password must be at least 8 characters.'); return; }
+
+  setLoading('btn-create', true);
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password: pass,
+    options: {
+      data: { full_name: name, role: role },
+      emailRedirectTo: window.location.origin + '/' + DASHBOARD_URL
+    }
+  });
+  setLoading('btn-create', false);
+
+  if (error) { showAlert('create','error','✗ ' + error.message); return; }
+
+  if (data.user?.identities?.length === 0) {
+    showAlert('create','error','✗ This email is already registered.');
+  } else {
+    showAlert('create','success', `✓ Account created for ${email}. Confirmation email sent.`);
+    document.getElementById('create-name').value = '';
+    document.getElementById('create-email').value = '';
+    document.getElementById('create-pass').value = '';
+    document.getElementById('create-pass2').value = '';
+    document.getElementById('create-strength').className = 'strength-bar';
+  }
+}
+
+// ── UPDATE PASSWORD ───────────────────────────────
+async function doUpdate() {
+  const email   = document.getElementById('update-email').value.trim();
+  const oldPass = document.getElementById('update-old-pass').value;
+  const newPass = document.getElementById('update-new-pass').value;
+  const newPass2= document.getElementById('update-new-pass2').value;
+
+  if (!email || !oldPass || !newPass) { showAlert('update','error','All fields are required.'); return; }
+  if (newPass !== newPass2)           { showAlert('update','error','New passwords do not match.'); return; }
+  if (newPass.length < 8)             { showAlert('update','error','Password must be at least 8 characters.'); return; }
+
+  setLoading('btn-update', true);
+
+  // Sign in first to verify current credentials
+  const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password: oldPass });
+  if (signInErr) {
+    setLoading('btn-update', false);
+    showAlert('update','error','✗ Current password is incorrect.');
+    return;
+  }
+
+  // Now update
+  const { error: updateErr } = await supabase.auth.updateUser({ password: newPass });
+  setLoading('btn-update', false);
+
+  if (updateErr) { showAlert('update','error','✗ ' + updateErr.message); return; }
+  showAlert('update','success','✓ Password updated successfully. Redirecting…');
+  setTimeout(() => window.location.href = DASHBOARD_URL, 1200);
+}
+
+// ── FORGOT PASSWORD EMAIL ─────────────────────────
+async function doForgot() {
+  const email = document.getElementById('update-email').value.trim();
+  if (!email) { showAlert('update','error','Enter your email address above first.'); return; }
+
+  document.getElementById('btn-forgot').disabled = true;
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/login.html'
+  });
+  document.getElementById('btn-forgot').disabled = false;
+
+  if (error) { showAlert('update','error','✗ ' + error.message); return; }
+  showAlert('update','success','✓ Reset email sent to ' + email + '. Check your inbox.');
+}
+
+// ── Enter key support ─────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.panel.active').id;
+  if (active === 'panel-login')  doLogin();
+  if (active === 'panel-create') doCreate();
+  if (active === 'panel-update') doUpdate();
+});
+</script>
+</body>
+</html>
