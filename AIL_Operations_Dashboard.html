@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AIL Operations Management</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 // ════════════════════════════════════════
 // SEARCHABLE SELECT — universal component
 // ════════════════════════════════════════
@@ -290,7 +291,7 @@ html[data-theme="dark"] .toggle-knob{transform:translateX(20px);}
 
 /* ── LAYOUT ── */
 .body-wrap{padding:20px 24px;}
-.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px;}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-bottom:16px;}
 .metric{background:var(--surface);border-radius:var(--radius);padding:14px 16px;border:1px solid var(--border);border-left:4px solid var(--pink);box-shadow:var(--shadow);transition:background .25s,border-color .25s;}
 .metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-weight:600;}
 .metric-val{font-size:30px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--black);}
@@ -624,7 +625,26 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
   .metrics{grid-template-columns:repeat(2,1fr);}
   .stage-health-grid{grid-template-columns:repeat(3,1fr);}
   .decision-grid{grid-template-columns:1fr;}
+  .tab{padding:9px 12px;font-size:12px;}
 }
+@media(max-width:480px){
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .tabs{padding:0 8px;}
+  .tab{padding:8px 10px;font-size:11px;}
+}
+
+/* ── CARD-HEADER FILTER HELPERS (theme-aware) ── */
+.ch-filter-lbl{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}
+.ch-date-input{font-size:11px;padding:4px 8px;border-radius:6px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);outline:none;font-family:Inter,sans-serif;cursor:pointer;}
+.ch-filter-select{font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);outline:none;font-family:Inter,sans-serif;cursor:pointer;}
+.ch-clear-btn{font-size:11px;padding:3px 8px;border-radius:5px;border:1px solid var(--input-border);background:transparent;color:var(--muted);cursor:pointer;}
+.ch-clear-btn:hover{background:var(--del-hover-bg);color:var(--del-hover-txt);}
+
+/* ── LOADING SKELETON ── */
+@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+.skeleton{border-radius:6px;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);background-size:600px 100%;animation:shimmer 1.4s infinite linear;}
+.skel-row{height:44px;margin-bottom:8px;width:100%;}
+.skel-row:nth-child(2){width:88%;opacity:.8;}.skel-row:nth-child(3){width:75%;opacity:.65;}.skel-row:nth-child(4){width:82%;opacity:.5;}
 
 </style>
 </head>
@@ -774,21 +794,21 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
     <div class="card-header" style="flex-wrap:wrap;gap:8px;">
       <span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;">Project Pipeline</span>
       <div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap;">
-        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">From:</span>
-        <input type="date" id="proj-date-from" onchange="renderProjects()" style="font-size:11px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.4);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;cursor:pointer;">
-        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">To:</span>
-        <input type="date" id="proj-date-to" onchange="renderProjects()" style="font-size:11px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.4);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;cursor:pointer;">
-        <button onclick="clearProjDates()" style="font-size:11px;padding:3px 8px;border-radius:5px;border:1px solid rgba(224,32,160,0.4);background:transparent;color:rgba(255,255,255,0.45);cursor:pointer;">✕</button>
-        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">SP:</span>
-        <select id="proj-sp-filter" onchange="renderProjects()" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.5);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;min-width:120px;cursor:pointer;">
+        <span class="ch-filter-lbl">From:</span>
+        <input type="date" id="proj-date-from" onchange="renderProjects()" class="ch-date-input">
+        <span class="ch-filter-lbl">To:</span>
+        <input type="date" id="proj-date-to" onchange="renderProjects()" class="ch-date-input">
+        <button onclick="clearProjDates()" class="ch-clear-btn">✕</button>
+        <span class="ch-filter-lbl">SP:</span>
+        <select id="proj-sp-filter" onchange="renderProjects()" class="ch-filter-select" style="min-width:120px;">
           <option value="">All</option>
         </select>
-        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">Cust:</span>
-        <select id="proj-cust-filter" onchange="renderProjects()" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.5);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;min-width:120px;cursor:pointer;">
+        <span class="ch-filter-lbl">Cust:</span>
+        <select id="proj-cust-filter" onchange="renderProjects()" class="ch-filter-select" style="min-width:120px;">
           <option value="">All</option>
         </select>
-        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">Stage:</span>
-        <select id="proj-stage-filter" onchange="renderProjects()" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.5);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;min-width:120px;cursor:pointer;">
+        <span class="ch-filter-lbl">Stage:</span>
+        <select id="proj-stage-filter" onchange="renderProjects()" class="ch-filter-select" style="min-width:120px;">
           <option value="">All Stages</option>
           <option value="engineering">Engineering</option>
           <option value="purchase">Purchase</option>
@@ -798,15 +818,15 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
           <option value="dispatch">Dispatch</option>
           <option value="installation">Installation / Comm.</option>
         </select>
-        <span style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;white-space:nowrap;">Status:</span>
-        <select id="proj-status-filter" onchange="renderProjects()" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1.5px solid rgba(224,32,160,0.5);background:#2a2a2a;color:#fff;outline:none;font-family:Inter,sans-serif;min-width:120px;cursor:pointer;">
+        <span class="ch-filter-lbl">Status:</span>
+        <select id="proj-status-filter" onchange="renderProjects()" class="ch-filter-select" style="min-width:120px;">
           <option value="">All Status</option>
           <option value="Running">⚡ Running</option>
           <option value="Pending">🕐 Pending</option>
           <option value="Completed">✅ Completed</option>
         </select>
         <span id="proj-count-label" style="font-size:12px;color:var(--pink3);">0 Projects</span>
-        <button class="pdf-btn" style="padding:5px 12px;font-size:12px;" onclick="exportProjectsPDF()">⬇ Export PDF</button>
+        <button class="pdf-btn" style="padding:5px 12px;font-size:12px;" onclick="exportProjectsPDF()">⬇ Export Report</button>
       </div>
     </div>
     <div class="proj-scroll">
@@ -876,7 +896,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
       <div class="cl-summary" id="wp-summary"></div>
     </div>
     <div style="display:flex;gap:8px;">
-      <button class="wp-pdf-btn" onclick="exportWiringPDF()">⬇ Export PDF</button>
+      <button class="wp-pdf-btn" onclick="exportWiringPDF()">⬇ Export Report</button>
       <button class="wp-manage-btn" onclick="openWiringPersonModal()">＋ Manage Team</button>
     </div>
   </div>
@@ -893,7 +913,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 </div>
 
 <!-- WIRING PERSON MODAL -->
-<div class="modal-overlay" id="wiring-person-modal">
+<div class="modal-overlay" id="wiring-person-modal" role="dialog" aria-modal="true" aria-labelledby="wiring-modal-title">
   <div class="modal" style="width:480px;">
     <div class="modal-head">
       <h3>⚡ Manage Wiring Team</h3>
@@ -912,7 +932,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 <div id="tab-changelog" class="panel">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
     <div class="section-title" style="margin-bottom:0;">Stage Change History</div>
-    <button class="pdf-btn" onclick="exportPDF()">⬇ Export PDF</button>
+    <button class="pdf-btn" onclick="exportPDF()">⬇ Export Report</button>
   </div>
   <!-- CHANGELOG DATE FILTER BAR -->
   <div class="cl-filter-bar" style="margin-bottom:12px;">
@@ -949,7 +969,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 </div>
 
 <!-- SALESPERSON MANAGEMENT MODAL -->
-<div class="modal-overlay" id="sales-modal">
+<div class="modal-overlay" id="sales-modal" role="dialog" aria-modal="true" aria-labelledby="sales-modal-title">
   <div class="modal">
     <div class="modal-head">
       <h3>👤 Manage Salespersons</h3>
@@ -967,7 +987,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 
 
 <!-- CUSTOMER MANAGEMENT MODAL -->
-<div class="modal-overlay" id="cust-modal">
+<div class="modal-overlay" id="cust-modal" role="dialog" aria-modal="true" aria-labelledby="cust-modal-title">
   <div class="modal">
     <div class="modal-head">
       <h3>🏢 Manage Customers</h3>
@@ -1002,6 +1022,9 @@ function initials(n){if(!n)return'?';const p=n.trim().split(' ');return p.length
 function selectClass(s){return s==='Completed'?'s-completed':s==='Running'?'s-running':'s-pending';}
 
 // ── SUPABASE CLOUD STORAGE ────────────────────────────────────────────────────
+// SECURITY NOTE: This is a public anon key. Ensure Row-Level Security (RLS)
+// is ENABLED on the ail_app_state table in your Supabase project dashboard
+// to prevent unauthorised read/write access.
 const SUPABASE_URL = 'https://pfknkwjoxixgzdzznegr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBma25rd2pveGl4Z3pkenpuZWdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTI4ODYsImV4cCI6MjA5NDI2ODg4Nn0.W_ckuzV_0frebKvHgUqpPWuxxl-vWGOejDEEgXtpEHc';
 const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1033,9 +1056,28 @@ async function loadData(){
     projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); }); });
     setCloudStatus(true,'☁ Cloud connected');
   } catch(e){
-    console.warn('Cloud load failed — using empty data',e);
-    setCloudStatus(false,'⚠ Cloud unreachable');
-    projects=[]; changelog=[]; salespersons=[]; customers=[]; wiringPersons=[]; wiringAssign={};
+    console.warn('Cloud load failed — attempting localStorage cache',e);
+    setCloudStatus(false,'⚠ Cloud unreachable — showing cached data');
+    // Restore from localStorage so users don't lose visibility of their data
+    try{
+      const lsProjects = localStorage.getItem(LS_PROJECTS);
+      const lsChangelog = localStorage.getItem(LS_CHANGELOG);
+      const lsSalespersons = localStorage.getItem(LS_SALESPERSONS);
+      const lsCustomers = localStorage.getItem(LS_CUSTOMERS);
+      const lsWiringPersons = localStorage.getItem(LS_WIRING_PERSONS);
+      const lsWiringAssign = localStorage.getItem(LS_WIRING_ASSIGN);
+      projects      = lsProjects      ? JSON.parse(lsProjects)      : [];
+      changelog     = lsChangelog     ? JSON.parse(lsChangelog)     : [];
+      salespersons  = lsSalespersons  ? JSON.parse(lsSalespersons)  : [];
+      customers     = lsCustomers     ? JSON.parse(lsCustomers)     : [];
+      wiringPersons = lsWiringPersons ? JSON.parse(lsWiringPersons) : [];
+      wiringAssign  = lsWiringAssign  ? JSON.parse(lsWiringAssign)  : {};
+      const blankStage=()=>({status:'Pending',date:'',resp:'',remark:''});
+      projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); }); });
+      if(projects.length) setCloudStatus(false,'⚠ Offline — showing cached data ('+projects.length+' projects)');
+    }catch(_){
+      projects=[]; changelog=[]; salespersons=[]; customers=[]; wiringPersons=[]; wiringAssign={};
+    }
   }
 }
 
@@ -1193,7 +1235,7 @@ function renderProjects(){
       <td>${p.customer}</td><td>${p.type}</td>
       <td><span class="pill ${pc}">${p.priority}</span></td>
       <td>${salesHtml}</td>${stageCells}
-      <td><button class="del-btn" onclick="deleteProject(${pi})" title="Delete project">🗑</button></td>
+      <td><button class="del-btn" onclick="deleteProject(${pi})" title="Delete project ${p.no}" aria-label="Delete project ${p.no}">🗑</button></td>
     </tr>`;
   }).join('');
 }
@@ -2221,7 +2263,9 @@ function clearCLFilters(){
 }
 
 // ── TABS ──
+let _activeTab = 'overview';
 function showTab(name,btn){
+  _activeTab = name;
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
@@ -2234,16 +2278,36 @@ function showTab(name,btn){
   if(name==='changelog') { renderChangelog(); }
 }
 
-// ── REFRESH ALL ──
+// ── REFRESH ALL — only re-renders active tab to avoid unnecessary work ──
 function refreshAll(rerenderTable=true){
   renderPipelineFilter();
   renderProjFilter();
-  renderMetrics();renderPipeline();renderFeed();renderDonut();renderStageHealth();renderDecisionPanel();renderChangelog();renderSalesperson();renderWiringPlanner();
-  if(rerenderTable)renderProjects();
+  // Always update metrics (visible on overview), then only render the active tab
+  renderMetrics();
+  if(_activeTab==='overview') { renderPipeline();renderFeed();renderDonut();renderStageHealth();renderDecisionPanel(); }
+  if(_activeTab==='salesperson') { renderSalesperson(); }
+  if(_activeTab==='wiring')    { renderWiringPlanner(); }
+  if(_activeTab==='changelog') { renderChangelog(); }
+  if(rerenderTable && _activeTab==='projects') renderProjects();
 }
 
 // ── INIT (async — loads from Supabase then renders everything) ──
 (async function init(){
+  // Show loading skeleton while data fetches
+  const tbody = document.getElementById('proj-tbody');
+  if(tbody) tbody.innerHTML = `<tr><td colspan="14" style="padding:16px;">
+    <div class="skeleton skel-row"></div>
+    <div class="skeleton skel-row"></div>
+    <div class="skeleton skel-row"></div>
+    <div class="skeleton skel-row"></div>
+  </td></tr>`;
+  const wiringWrap = document.getElementById('wiring-planner-wrap');
+  if(wiringWrap) wiringWrap.innerHTML = `<div style="padding:16px;">
+    <div class="skeleton skel-row"></div>
+    <div class="skeleton skel-row"></div>
+    <div class="skeleton skel-row"></div>
+  </div>`;
+
   await loadData();
   refreshSalesDropdown();
   refreshCustDropdown();
