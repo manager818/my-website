@@ -505,6 +505,10 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 .pdf-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(224,32,160,0.35);}
 .del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px;transition:all .15s;}
 .del-btn:hover{background:var(--del-hover-bg);color:var(--del-hover-txt);}
+.btn-primary{background:linear-gradient(135deg,var(--pink) 0%,var(--pink2) 100%);color:#fff;border:none;border-radius:7px;padding:8px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;transition:all .2s;box-shadow:0 2px 8px rgba(224,32,160,0.25);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(224,32,160,0.4);}
+.btn-secondary{background:var(--surface);color:var(--muted);border:1.5px solid var(--border);border-radius:7px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--pink);color:var(--pink);}
 
 /* ── LAYOUT ── */
 .bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
@@ -730,9 +734,130 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 .skel-row{height:44px;margin-bottom:8px;width:100%;}
 .skel-row:nth-child(2){width:88%;opacity:.8;}.skel-row:nth-child(3){width:75%;opacity:.65;}.skel-row:nth-child(4){width:82%;opacity:.5;}
 
+/* ═══════════════════════════════════════════════
+   AUTHENTICATION
+═══════════════════════════════════════════════ */
+.login-overlay{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0A0A0F 0%,#150810 60%,#1A0A14 100%);display:flex;align-items:flex-start;justify-content:flex-end;}
+.login-card{background:var(--modal-bg);border:1px solid rgba(224,32,160,0.3);border-radius:18px;padding:40px 36px;width:400px;max-width:95vw;box-shadow:0 24px 80px rgba(224,32,160,0.25);margin:24px 24px 0 0;max-height:calc(100vh - 48px);overflow-y:auto;}
+.login-brand{text-align:center;margin-bottom:28px;}
+.login-brand-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:.06em;}
+.login-brand-sub{font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;font-style:italic;}
+.login-title{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--pink);text-align:center;margin-bottom:5px;}
+.login-sub{font-size:12px;color:rgba(255,255,255,0.45);text-align:center;margin-bottom:28px;}
+.login-field{margin-bottom:16px;}
+.login-field label{display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.login-field input{width:100%;font-size:14px;padding:11px 14px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#fff;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s,background .2s;}
+.login-field input:focus{border-color:var(--pink);background:rgba(255,255,255,0.1);}
+.login-field input::placeholder{color:rgba(255,255,255,0.3);}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--pink) 0%,var(--pink2) 100%);color:#fff;border:none;border-radius:8px;padding:13px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;margin-top:8px;transition:all .2s;box-shadow:0 4px 16px rgba(224,32,160,0.35);}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(224,32,160,0.5);}
+.login-btn:disabled{opacity:.55;transform:none;cursor:default;}
+.auth-error{color:#FF6655;font-size:12px;margin-top:12px;text-align:center;min-height:18px;font-weight:500;}
+.login-forgot{text-align:center;margin-top:14px;font-size:12px;color:rgba(255,255,255,0.4);}
+.login-forgot a{color:var(--pink3);cursor:pointer;text-decoration:underline;}
+.login-forgot a:hover{color:var(--pink);}
+.user-info{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Rajdhani',sans-serif;cursor:default;}
+.user-name-wrap{display:flex;flex-direction:column;max-width:110px;}
+.user-display-name{font-size:12px;color:rgba(255,255,255,0.85);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-role-badge{font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;letter-spacing:.04em;width:fit-content;}
+.user-role-badge.admin{background:rgba(224,32,160,0.25);color:var(--pink3);}
+.user-role-badge.viewer{background:rgba(26,107,196,0.25);color:#70B8FF;}
+.logout-btn{background:none;border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.55);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.logout-btn:hover{border-color:var(--pink);color:var(--pink);}
+
+/* ═══════════════════════════════════════════════
+   DEADLINES
+═══════════════════════════════════════════════ */
+.stage-cell{display:flex;flex-direction:column;gap:4px;min-width:145px;}
+.deadline-row{display:flex;align-items:center;gap:4px;}
+.dl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dl-overdue .dl-dot{background:#D03020;}
+.dl-at-risk .dl-dot{background:#D07010;}
+.dl-ok .dl-dot{background:#1E9B6B;}
+.dl-none .dl-dot{background:var(--border);}
+.dl-done .dl-dot{background:#1E9B6B;opacity:.5;}
+.deadline-date-input{font-size:10px;color:var(--muted);border:1px solid var(--border);background:var(--surface2);cursor:pointer;padding:2px 4px;border-radius:4px;outline:none;color-scheme:light dark;width:100%;}
+.deadline-date-input:focus{border-color:#D07010;}
+.dl-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;flex-shrink:0;}
+.dl-overdue .dl-label{color:#D03020;}
+.dl-at-risk .dl-label{color:#D07010;}
+.dl-ok .dl-label{color:#1E9B6B;}
+.dl-none .dl-label{color:var(--muted);}
+.dl-done .dl-label{color:var(--muted);}
+.actual-label{font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em;}
+.sla-ok{background:var(--stage-done-bg);color:var(--stage-done-txt);font-size:8px;padding:1px 5px;border-radius:6px;font-weight:700;white-space:nowrap;}
+.sla-late{background:var(--pill-high-bg);color:var(--pill-high-txt);font-size:8px;padding:1px 5px;border-radius:6px;font-weight:700;white-space:nowrap;}
+
+/* ═══════════════════════════════════════════════
+   GANTT TIMELINE
+═══════════════════════════════════════════════ */
+.gantt-wrap{display:flex;flex-direction:column;overflow:hidden;}
+.gantt-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.gantt-zoom-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 13px;font-size:12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.03em;transition:all .15s;}
+.gantt-zoom-btn.active,.gantt-zoom-btn:hover{background:var(--pink);color:#fff;border-color:var(--pink);}
+.gantt-legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+.gantt-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.gantt-legend-dot{width:12px;height:10px;border-radius:3px;flex-shrink:0;}
+.gantt-frame{display:flex;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);}
+.gantt-left-panel{flex-shrink:0;width:220px;border-right:2px solid var(--border);overflow:hidden;background:var(--surface);}
+.gantt-right-panel{flex:1;overflow-x:auto;overflow-y:hidden;position:relative;}
+.gantt-thead{height:48px;display:flex;align-items:stretch;background:var(--th-bg);border-bottom:2px solid var(--pink);position:sticky;top:0;z-index:4;}
+.gantt-th{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--th-txt);padding:0 14px;display:flex;align-items:center;height:48px;border-right:2px solid var(--border);}
+.gantt-row{height:48px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:var(--surface);transition:background .15s;}
+.gantt-row:hover{background:var(--hover-row);}
+.gantt-row:last-child{border-bottom:none;}
+.gantt-cell-label{padding:0 12px;overflow:hidden;}
+.gantt-proj-no{font-size:13px;font-weight:700;font-family:'Rajdhani',sans-serif;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gantt-proj-sub{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.gantt-period-header{position:relative;height:48px;min-width:100%;}
+.gantt-period-cell{position:absolute;top:0;height:48px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);font-family:'Rajdhani',sans-serif;letter-spacing:.03em;border-right:1px solid var(--border);overflow:hidden;}
+.gantt-timeline-row{position:relative;height:48px;}
+.gantt-gridline{position:absolute;top:0;bottom:0;width:1px;background:var(--border);opacity:.5;pointer-events:none;}
+.gantt-bar{position:absolute;top:50%;transform:translateY(-50%);height:16px;border-radius:8px;cursor:pointer;transition:filter .15s,opacity .15s;display:flex;align-items:center;overflow:hidden;}
+.gantt-bar:hover{filter:brightness(1.18);}
+.gantt-bar-inner{font-size:8px;font-weight:700;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px;pointer-events:none;}
+.gantt-deadline-mark{position:absolute;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:2px;rotate:45deg;z-index:3;cursor:default;}
+.gantt-today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--pink);opacity:.75;pointer-events:none;z-index:5;}
+.gantt-today-label{position:absolute;top:4px;font-size:9px;font-weight:700;color:var(--pink);transform:translateX(-50%);white-space:nowrap;background:var(--surface);padding:0 3px;border-radius:3px;z-index:6;}
+.gantt-empty{display:flex;align-items:center;justify-content:center;height:220px;color:var(--muted);font-size:13px;flex-direction:column;gap:10px;}
+.gantt-bar-tooltip{position:fixed;background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:11px;pointer-events:none;z-index:9999;box-shadow:var(--shadow-lg);max-width:220px;display:none;}
+.gantt-bar-tooltip.visible{display:block;}
+.gantt-sla-chip{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;margin-top:4px;}
+.gantt-sla-ontime{background:var(--stage-done-bg);color:var(--stage-done-txt);}
+.gantt-sla-late{background:var(--pill-high-bg);color:var(--pill-high-txt);}
+.gantt-sla-pending{background:var(--stage-pending-bg);color:var(--stage-pending-txt);}
+
 </style>
 </head>
 <body>
+
+<!-- ══ LOGIN OVERLAY (shown when not authenticated) ══ -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-name">⚡ ADITYA INDUSTECH LTD.</div>
+      <div class="login-brand-sub">Leading The Automation Age</div>
+    </div>
+    <div class="login-title">Operations Portal</div>
+    <div class="login-sub">Sign in to access the dashboard</div>
+    <div class="login-field">
+      <label>Email Address</label>
+      <input type="email" id="auth-email" placeholder="you@company.com" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('auth-password').focus()">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')signIn()">
+    </div>
+    <button class="login-btn" id="auth-btn" onclick="signIn()">Sign In →</button>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="login-forgot"><a onclick="resetPassword()">Forgot password?</a></div>
+  </div>
+</div>
+
+<!-- ══ GANTT BAR TOOLTIP ══ -->
+<div class="gantt-bar-tooltip" id="gantt-tooltip"></div>
+
 <div class="dash">
 
 <div class="header">
@@ -750,11 +875,18 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
         <span class="theme-toggle-label" id="theme-label">Light</span>
       </div>
       <div class="live-badge"><span class="pulse"></span>Live Dashboard</div>
-    </div>
+      <!-- User Info (shown after auth) -->
+      <div class="user-info" id="user-info" style="display:none;">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div class="user-name-wrap">
+          <span class="user-display-name" id="user-display-name">User</span>
+          <span class="user-role-badge admin" id="user-role-badge">Admin</span>
+        </div>
+        <button class="logout-btn" onclick="signOut()" title="Sign out">Sign Out</button>
+      </div>
   </div>
   <div class="header-subtitle">
-    Operations Management System &nbsp;·&nbsp; <span>All Stages Editable</span> &nbsp;·&nbsp; <span>Auto-Saved</span> &nbsp;·&nbsp; <span title="Alt+N to add project, Alt+F to search">⌨ Alt+N Add · Alt+F Search</span>
-    <div class="storage-bar"><span class="storage-dot" id="cloud-dot"></span><span id="cloud-label">Connecting to cloud…</span></div>
+    Operations Management System
   </div>
 </div>
 
@@ -764,6 +896,8 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
   <button class="tab" onclick="showTab('salesperson',this)">👤 Salesperson</button>
   <button class="tab" onclick="showTab('wiring',this)">⚡ Wiring Planner</button>
   <button class="tab" onclick="showTab('changelog',this)">📋 Change Log</button>
+  <button class="tab" onclick="showTab('gantt',this)">📅 Gantt Timeline</button>
+  <button class="tab" onclick="showTab('outside',this)">🌐 Outside Project</button>
 </div>
 
 <div class="body-wrap">
@@ -849,7 +983,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 </div>
 
 <div id="tab-projects" class="panel">
-  <div class="add-panel">
+  <div class="add-panel admin-only">
     <div class="add-panel-title">＋ Add New Project</div>
     <div class="form-grid" style="grid-template-columns:repeat(7,1fr);">
       <div class="form-field"><label>Project No</label><input id="f-no" placeholder="e.g. AIL-1999"></div>
@@ -1079,8 +1213,188 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
   <div class="card"><div id="changelog-wrap"><div class="empty-state"><div class="empty-icon">📋</div>No changes yet — edit any stage to log it here</div></div></div>
 </div>
 
+<!-- ══ GANTT TIMELINE TAB ══ -->
+<div id="tab-gantt" class="panel">
+  <div class="gantt-controls">
+    <div style="display:flex;gap:5px;">
+      <button class="gantt-zoom-btn" id="gz-week" onclick="setGanttZoom('week',this)">Week</button>
+      <button class="gantt-zoom-btn active" id="gz-month" onclick="setGanttZoom('month',this)">Month</button>
+      <button class="gantt-zoom-btn" id="gz-quarter" onclick="setGanttZoom('quarter',this)">Quarter</button>
+    </div>
+    <select id="gantt-sp-filter" onchange="renderGantt()" class="ch-filter-select" style="min-width:140px;">
+      <option value="">All Salespersons</option>
+    </select>
+    <select id="gantt-cust-filter" onchange="renderGantt()" class="ch-filter-select" style="min-width:140px;">
+      <option value="">All Customers</option>
+    </select>
+    <select id="gantt-stage-filter" onchange="renderGantt()" class="ch-filter-select" style="min-width:130px;">
+      <option value="">All Stages</option>
+      <option value="engineering">Engineering</option>
+      <option value="purchase">Purchase</option>
+      <option value="fabrication">Fabrication</option>
+      <option value="wiring">Wiring</option>
+      <option value="testing">Testing</option>
+      <option value="dispatch">Dispatch</option>
+      <option value="installation">Installation</option>
+    </select>
+    <button class="clear-date-btn" onclick="clearGanttFilters()">✕ Clear</button>
+    <div style="margin-left:auto;" class="gantt-legend">
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#1E9B6B;"></div>Completed</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#E020A0;"></div>Running</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--stage-pending-bg);border:1px solid var(--stage-pending-bd);"></div>Pending</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#D03020;width:10px;height:10px;transform:rotate(45deg);border-radius:2px;"></div>Overdue</div>
+    </div>
+  </div>
+  <div id="gantt-wrap"></div>
 </div>
+
+<!-- ══ OUTSIDE PROJECT TAB ══ -->
+<div id="tab-outside" class="panel">
+
+  <!-- Add / Edit Form -->
+  <div class="add-panel admin-only" id="op-form-panel">
+    <div class="add-panel-title" id="op-form-title">＋ Add Outside Project</div>
+    
+    <!-- Basic Project Information -->
+    <div style="font-weight:600;color:var(--pink);margin-bottom:10px;font-size:13px;">📋 Project Information</div>
+    <div class="form-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="form-field">
+        <label>Customer Name</label>
+        <input id="op-f-cust" placeholder="e.g. Reliance Industries">
+      </div>
+      <div class="form-field">
+        <label>Supplier Name</label>
+        <input id="op-f-supplier" placeholder="e.g. ABC Manufacturing">
+      </div>
+      <div class="form-field">
+        <label>Project Details</label>
+        <input id="op-f-details" placeholder="e.g. MCC Panel Supply">
+      </div>
+      <div class="form-field">
+        <label>Sales Person</label>
+        <input id="op-f-sales" placeholder="e.g. Rahul Shah">
+      </div>
+      <div class="form-field">
+        <label>Start Date</label>
+        <input type="date" id="op-f-start">
+      </div>
+      <div class="form-field">
+        <label>End Date</label>
+        <input type="date" id="op-f-end">
+      </div>
+    </div>
+
+    <!-- Process Check Section -->
+    <div style="font-weight:600;color:var(--pink);margin-top:16px;margin-bottom:10px;font-size:13px;">✓ Process Check Dates</div>
+    
+    <!-- Drawing Approval -->
+    <div style="margin-bottom:12px;padding:10px;background:var(--surface2);border-radius:7px;border-left:3px solid var(--pink);">
+      <div style="font-weight:600;font-size:12px;color:var(--text);margin-bottom:8px;">🖼 Drawing Approval</div>
+      <div class="form-grid" style="grid-template-columns:repeat(2,1fr);gap:10px;">
+        <div class="form-field">
+          <label style="font-size:11px;">Supplier Submission Date</label>
+          <input type="date" id="op-f-dwg-supplier-date">
+        </div>
+        <div class="form-field">
+          <label style="font-size:11px;">Customer Approval Date</label>
+          <input type="date" id="op-f-dwg-customer-date">
+        </div>
+      </div>
+    </div>
+
+    <!-- FAT (Factory Acceptance Test) -->
+    <div style="margin-bottom:12px;padding:10px;background:var(--surface2);border-radius:7px;border-left:3px solid #1A6BC4;">
+      <div style="font-weight:600;font-size:12px;color:var(--text);margin-bottom:8px;">🧪 FAT (Factory Acceptance Test)</div>
+      <div class="form-grid" style="grid-template-columns:repeat(2,1fr);gap:10px;">
+        <div class="form-field">
+          <label style="font-size:11px;">Supplier Date</label>
+          <input type="date" id="op-f-fat-supplier-date">
+        </div>
+        <div class="form-field">
+          <label style="font-size:11px;">Customer Date</label>
+          <input type="date" id="op-f-fat-customer-date">
+        </div>
+      </div>
+    </div>
+
+    <!-- Dispatch -->
+    <div style="margin-bottom:12px;padding:10px;background:var(--surface2);border-radius:7px;border-left:3px solid #1E9B6B;">
+      <div style="font-weight:600;font-size:12px;color:var(--text);margin-bottom:8px;">📦 Dispatch</div>
+      <div class="form-grid" style="grid-template-columns:repeat(2,1fr);gap:10px;">
+        <div class="form-field">
+          <label style="font-size:11px;">Supplier Date</label>
+          <input type="date" id="op-f-dispatch-supplier-date">
+        </div>
+        <div class="form-field">
+          <label style="font-size:11px;">Customer Date</label>
+          <input type="date" id="op-f-dispatch-customer-date">
+        </div>
+      </div>
+    </div>
+
+    <!-- Remarks -->
+    <div class="form-grid" style="grid-template-columns:1fr;">
+      <div class="form-field">
+        <label>Remarks</label>
+        <input id="op-f-remarks" placeholder="Optional notes…">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;">
+      <button class="btn-primary" onclick="saveOutsideProject()" id="op-save-btn">＋ Add Project</button>
+      <button class="btn-secondary" id="op-cancel-btn" style="display:none;" onclick="cancelOutsideEdit()">✕ Cancel</button>
+      <span id="op-form-error" style="color:#D03020;font-size:12px;font-weight:600;"></span>
+    </div>
+  </div>
+
+  <!-- Filter / Search Bar -->
+  <div class="cl-filter-bar" style="margin-bottom:12px;">
+    <label>Search:</label>
+    <input type="text" id="op-search" placeholder="Customer, project, salesperson…" oninput="renderOutsideProjects()" style="font-size:12px;padding:5px 9px;border-radius:6px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);outline:none;font-family:inherit;min-width:200px;">
+    <label>From:</label>
+    <input type="date" id="op-date-from" onchange="renderOutsideProjects()" style="font-size:12px;padding:5px 9px;border-radius:6px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);outline:none;font-family:inherit;cursor:pointer;color-scheme:light dark;">
+    <label>To:</label>
+    <input type="date" id="op-date-to" onchange="renderOutsideProjects()" style="font-size:12px;padding:5px 9px;border-radius:6px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);outline:none;font-family:inherit;cursor:pointer;color-scheme:light dark;">
+    <button class="cl-clr-btn" onclick="clearOPFilters()">✕ Clear</button>
+    <div class="cl-summary" id="op-summary" style="margin-left:auto;"></div>
+    <button class="pdf-btn" onclick="exportOutsidePDF()" style="padding:5px 14px;font-size:13px;">⬇ Export</button>
+  </div>
+
+  <!-- Table -->
+  <div class="card" style="overflow:hidden;">
+    <div style="background:linear-gradient(90deg,#111,#252525);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;">🌐 Outside Project Records</span>
+      <span style="font-size:11px;color:rgba(255,255,255,0.5);">Track external / third-party project work</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="log-table" id="op-table">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>Customer Name</th>
+            <th>Supplier Name</th>
+            <th>Project Details</th>
+            <th>Sales Person</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Duration</th>
+            <th>Dwg Approval<br><span style="font-size:10px;font-weight:400;">(Supplier | Customer)</span></th>
+            <th>FAT<br><span style="font-size:10px;font-weight:400;">(Supplier | Customer)</span></th>
+            <th>Dispatch<br><span style="font-size:10px;font-weight:400;">(Supplier | Customer)</span></th>
+            <th>Remarks</th>
+            <th style="width:90px;text-align:center;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="op-tbody">
+          <tr><td colspan="9"><div class="empty-state"><div class="empty-icon">🌐</div>No outside projects yet — add one above</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
+</div><!-- /body-wrap -->
+</div><!-- /dash -->
 
 <!-- SALESPERSON MANAGEMENT MODAL -->
 <div class="modal-overlay" id="sales-modal" role="dialog" aria-modal="true" aria-labelledby="sales-modal-title">
@@ -1169,9 +1483,9 @@ async function loadData(){
     wiringPersons = Array.isArray(map[LS_WIRING_PERSONS])? map[LS_WIRING_PERSONS]: [];
     wiringAssign  = (map[LS_WIRING_ASSIGN] && typeof map[LS_WIRING_ASSIGN]==='object' && !Array.isArray(map[LS_WIRING_ASSIGN]))
                     ? map[LS_WIRING_ASSIGN] : {};
-    // ── MIGRATION: ensure every project has all current stages (safe for existing data) ──
-    const blankStage=()=>({status:'Pending',date:'',resp:'',remark:''});
-    projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); }); });
+    // ── MIGRATION: ensure every project has all current stages + deadline field ──
+    const blankStage=()=>({status:'Pending',date:'',deadline:'',resp:'',remark:''});
+    projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); if(p[s].deadline===undefined)p[s].deadline=''; }); });
     setCloudStatus(true,'☁ Cloud connected');
   } catch(e){
     console.warn('Cloud load failed — attempting localStorage cache',e);
@@ -1190,8 +1504,8 @@ async function loadData(){
       customers     = lsCustomers     ? JSON.parse(lsCustomers)     : [];
       wiringPersons = lsWiringPersons ? JSON.parse(lsWiringPersons) : [];
       wiringAssign  = lsWiringAssign  ? JSON.parse(lsWiringAssign)  : {};
-      const blankStage=()=>({status:'Pending',date:'',resp:'',remark:''});
-      projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); }); });
+      const blankStage=()=>({status:'Pending',date:'',deadline:'',resp:'',remark:''});
+      projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); if(p[s].deadline===undefined)p[s].deadline=''; }); });
       if(projects.length) setCloudStatus(false,'⚠ Offline — showing cached data ('+projects.length+' projects)');
     }catch(_){
       projects=[]; changelog=[]; salespersons=[]; customers=[]; wiringPersons=[]; wiringAssign={};
@@ -1373,18 +1687,33 @@ function renderProjects(){
   }
 
   document.getElementById('proj-tbody').innerHTML=paginated.map(p=>{
-    const stageCells=STAGES.map(s=>`
+    const stageCells=STAGES.map(s=>{
+      const ds=getDeadlineStatus(p[s]);
+      const dlClass=`deadline-row dl-${ds}`;
+      const slaHtml=p[s].status==='Completed'&&p[s].deadline&&p[s].date
+        ?(p[s].date<=p[s].deadline?'<span class="sla-ok">✓ On Time</span>':'<span class="sla-late">⚠ Late</span>'):'';
+      return `
       <td><div class="stage-cell">
         <select class="stage-select ${selectClass(p[s].status)}" onchange="onStatusChange('${esc(p.no)}','${s}',this)" aria-label="${s} status for ${esc(p.no)}">
           ${STATUS_OPTS.map(o=>`<option value="${o}"${o===p[s].status?' selected':''}>${o}</option>`).join('')}
         </select>
-        <div class="stage-date"><input type="date" value="${esc(p[s].date)}" onchange="onDateChange('${esc(p.no)}','${s}',this.value)" aria-label="${s} date"></div>
+        <div class="${dlClass}" title="Target deadline">
+          <span class="dl-dot"></span>
+          <span class="dl-label">Target</span>
+          <input class="deadline-date-input" type="date" value="${esc(p[s].deadline||'')}" onchange="onDeadlineChange('${esc(p.no)}','${s}',this.value)" aria-label="${s} deadline">
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span class="actual-label">Actual</span>
+          <div class="stage-date" style="flex:1;"><input type="date" value="${esc(p[s].date)}" onchange="onDateChange('${esc(p.no)}','${s}',this.value)" aria-label="${s} actual date"></div>
+        </div>
+        ${slaHtml}
         <input class="resp-input" type="text" placeholder="Responsible…" value="${esc(p[s].resp)}" onblur="onRespChange('${esc(p.no)}','${s}',this.value)" aria-label="${s} responsible">
         <div class="stage-remark">
           <textarea placeholder="Remark / note…" onblur="onRemarkChange('${esc(p.no)}','${s}',this.value)" aria-label="${s} remark">${esc(p[s].remark)}</textarea>
           <button class="remark-save" onclick="onRemarkChange('${esc(p.no)}','${s}',this.closest('.stage-remark').querySelector('textarea').value)" aria-label="Save remark">✓</button>
         </div>
-      </div></td>`).join('');
+      </div></td>`;
+    }).join('');
     const pc=p.priority==='High'?'pill-high':p.priority==='Low'?'pill-low':'pill-med';
     const salesHtml=p.salesperson
       ?`<div class="sales-badge"><div class="sales-avatar">${initials(p.salesperson)}</div>${esc(p.salesperson)}</div>`
@@ -1397,7 +1726,7 @@ function renderProjects(){
       <td>${esc(p.customer)}</td><td>${esc(p.type)}</td>
       <td><span class="pill ${pc}">${esc(p.priority)}</span></td>
       <td>${salesHtml}</td>${stageCells}
-      <td><button class="del-btn" onclick="deleteProject('${esc(p.no)}')" title="Delete project ${esc(p.no)}" aria-label="Delete project ${esc(p.no)}">🗑</button></td>
+      <td><button class="del-btn admin-only" onclick="deleteProject('${esc(p.no)}')" title="Delete project ${esc(p.no)}" aria-label="Delete project ${esc(p.no)}">🗑</button></td>
     </tr>`;
   }).join('');
 
@@ -1477,6 +1806,7 @@ let _deletedProject = null;
 let _undoTimer = null;
 
 function deleteProject(projNo){
+  if(!requireAdmin()) return;
   const pi = projects.findIndex(p => p.no === projNo);
   if(pi < 0) return;
   const p = projects[pi];
@@ -1508,6 +1838,7 @@ function undoDelete(){
 // ── STAGE EVENTS — use projNo (stable ID) instead of array index ──
 function onStatusChange(projNo,stage,sel){
   const p=projects.find(x=>x.no===projNo);if(!p)return;
+  if(!requireAdmin()){sel.value=p[stage].status;return;}  // revert on denied
   const old=p[stage].status;
   p[stage].status=sel.value;if(sel.value!=='Pending')p[stage].date=today();
   sel.className=`stage-select ${selectClass(sel.value)}`;
@@ -1539,6 +1870,7 @@ function onRemarkChange(projNo,stage,val){
 
 // ── ADD PROJECT ──
 function addProject(){
+  if(!requireAdmin()) return;
   const no=document.getElementById('f-no').value.trim();
   const po=document.getElementById('f-po').value.trim();
   const cust=document.getElementById('f-cust').value;
@@ -1547,7 +1879,7 @@ function addProject(){
   const sales=document.getElementById('f-sales').value;
   if(!no||!cust){showToast('⚠ Select Project No & Customer');return;}
   if(projects.find(p=>p.no===no)){showToast(`⚠ Project ${no} already exists`);return;}
-  const blank=()=>({status:'Pending',date:'',resp:'',remark:''});
+  const blank=()=>({status:'Pending',date:'',deadline:'',resp:'',remark:''});
   projects.push({no,po,customer:cust,type,priority:pri,salesperson:sales,
     engineering:blank(),purchase:blank(),fabrication:blank(),
     wiring:blank(),testing:blank(),dispatch:blank(),installation:blank()});
@@ -2546,6 +2878,336 @@ function clearCLFilters(){
   renderChangelog();
 }
 
+// ════════════════════════════════════════
+// AUTHENTICATION (Supabase Auth)
+// ════════════════════════════════════════
+// ADMIN_EMAILS: list of emails that get write access.
+// Leave the array EMPTY to grant admin to ALL authenticated users.
+// Add specific emails to restrict: e.g. ['manager@yourco.com']
+const ADMIN_EMAILS = [];
+
+let _currentUser = null;
+let _currentRole = 'viewer';
+
+async function checkAuth(){
+  const { data: { session } } = await sbClient.auth.getSession();
+  if(session?.user){
+    _applyUser(session.user);
+    _showApp();
+  } else {
+    _showLogin();
+  }
+  sbClient.auth.onAuthStateChange((event, session)=>{
+    if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED') && session?.user){
+      _applyUser(session.user);
+      _showApp();
+    } else if(event==='SIGNED_OUT'){
+      _currentUser=null; _currentRole='viewer';
+      _showLogin();
+    }
+  });
+}
+
+function _applyUser(user){
+  _currentUser = user;
+  _currentRole = (ADMIN_EMAILS.length===0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
+  const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+  const nameEl=document.getElementById('user-display-name');
+  const avatarEl=document.getElementById('user-avatar');
+  const roleEl=document.getElementById('user-role-badge');
+  const infoEl=document.getElementById('user-info');
+  if(nameEl) nameEl.textContent=name;
+  if(avatarEl) avatarEl.textContent=initials(name);
+  if(roleEl){ roleEl.textContent=_currentRole==='admin'?'Admin':'Viewer'; roleEl.className='user-role-badge '+_currentRole; }
+  if(infoEl) infoEl.style.display='flex';
+}
+
+async function signIn(){
+  const email=document.getElementById('auth-email').value.trim();
+  const password=document.getElementById('auth-password').value;
+  const errEl=document.getElementById('auth-error');
+  if(!email||!password){ errEl.textContent='Please enter your email and password.'; return; }
+  const btn=document.getElementById('auth-btn');
+  btn.textContent='Signing in…'; btn.disabled=true; errEl.textContent='';
+  const { error } = await sbClient.auth.signInWithPassword({ email, password });
+  btn.textContent='Sign In →'; btn.disabled=false;
+  if(error){ errEl.textContent=error.message||'Sign in failed — check your credentials.'; }
+}
+
+async function signOut(){
+  await sbClient.auth.signOut();
+  const infoEl=document.getElementById('user-info');
+  if(infoEl) infoEl.style.display='none';
+}
+
+async function resetPassword(){
+  const email=document.getElementById('auth-email').value.trim();
+  if(!email){ document.getElementById('auth-error').textContent='Enter your email address above first.'; return; }
+  const { error } = await sbClient.auth.resetPasswordForEmail(email);
+  if(error) document.getElementById('auth-error').textContent=error.message;
+  else document.getElementById('auth-error').style.color='#1E9B6B', document.getElementById('auth-error').textContent='Password reset email sent — check your inbox.';
+}
+
+function _showLogin(){
+  document.getElementById('login-overlay').style.display='flex';
+}
+
+function _showApp(){
+  document.getElementById('login-overlay').style.display='none';
+  // Apply role-based visibility
+  document.querySelectorAll('.admin-only').forEach(el=>{
+    el.style.display = _currentRole==='admin' ? '' : 'none';
+  });
+}
+
+function requireAdmin(){
+  if(_currentRole!=='admin'){ showToast('⚠ Read-only access — contact your administrator'); return false; }
+  return true;
+}
+
+// ════════════════════════════════════════
+// DEADLINE HELPERS
+// ════════════════════════════════════════
+function getDeadlineStatus(stage){
+  if(stage.status==='Completed') return 'done';
+  if(!stage.deadline) return 'none';
+  const t=today();
+  if(stage.deadline<t) return 'overdue';
+  const diffDays=Math.round((new Date(stage.deadline)-new Date(t))/(1000*60*60*24));
+  if(diffDays<=7) return 'at-risk';
+  return 'ok';
+}
+
+function onDeadlineChange(projNo, stage, val){
+  const p=projects.find(x=>x.no===projNo); if(!p)return;
+  if(!requireAdmin()) return;
+  const label=STAGE_LABELS[STAGES.indexOf(stage)];
+  const old=p[stage].deadline||'—';
+  p[stage].deadline=val;
+  changelog.unshift({time:new Date().toLocaleString(),project:p.no,customer:p.customer,salesperson:p.salesperson||'—',stage:label,resp:p[stage].resp||'—',change:`Target deadline: ${old} → ${val||'—'}`,date:p[stage].date,remark:p[stage].remark});
+  saveData();
+  showToast(`${p.no} · ${label} target → ${val||'cleared'}`);
+  refreshAll(false);
+}
+
+// Override onStatusChange and onDateChange to guard with requireAdmin
+const _origOnStatusChange = onStatusChange;
+// (guards already provided inline, no override needed — just patch write functions)
+function _guardedDelete(projNo){ if(requireAdmin()) deleteProject(projNo); }
+
+// ════════════════════════════════════════
+// GANTT TIMELINE
+// ════════════════════════════════════════
+let _ganttZoom = 'month'; // 'week' | 'month' | 'quarter'
+const GANTT_STAGE_COLORS = {
+  engineering: '#1A6BC4',
+  purchase:    '#7B3F9E',
+  fabrication: '#C46A1A',
+  wiring:      '#E020A0',
+  testing:     '#1E9B6B',
+  dispatch:    '#2D7D9A',
+  installation:'#8B6914'
+};
+const GANTT_STATUS_OPACITY = { Completed:1, Running:0.85, Pending:0.3 };
+
+function setGanttZoom(zoom, btn){
+  _ganttZoom=zoom;
+  document.querySelectorAll('.gantt-zoom-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderGantt();
+}
+
+function clearGanttFilters(){
+  ['gantt-sp-filter','gantt-cust-filter','gantt-stage-filter'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  renderGantt();
+}
+
+function _refreshGanttFilters(){
+  const sp=document.getElementById('gantt-sp-filter');
+  const cu=document.getElementById('gantt-cust-filter');
+  if(sp){const c=sp.value;sp.innerHTML='<option value="">All Salespersons</option>'+salespersons.map(s=>`<option value="${s}"${s===c?' selected':''}>${esc(s)}</option>`).join('');}
+  if(cu){const c=cu.value;cu.innerHTML='<option value="">All Customers</option>'+customers.map(s=>`<option value="${s}"${s===c?' selected':''}>${esc(s)}</option>`).join('');}
+}
+
+function renderGantt(){
+  const wrap=document.getElementById('gantt-wrap');
+  if(!wrap) return;
+  _refreshGanttFilters();
+
+  const spF=(document.getElementById('gantt-sp-filter')||{}).value||'';
+  const cuF=(document.getElementById('gantt-cust-filter')||{}).value||'';
+  const stF=(document.getElementById('gantt-stage-filter')||{}).value||'';
+
+  const visProjects=projects.filter(p=>{
+    if(spF && p.salesperson!==spF) return false;
+    if(cuF && p.customer!==cuF) return false;
+    return true;
+  });
+
+  // Collect all relevant dates (deadlines + actuals)
+  const allDates=[];
+  visProjects.forEach(p=>{
+    STAGES.forEach(s=>{
+      if(!stF||s===stF){
+        if(p[s].deadline) allDates.push(p[s].deadline);
+        if(p[s].date)     allDates.push(p[s].date);
+      }
+    });
+  });
+  allDates.push(today());
+
+  if(!visProjects.length){
+    wrap.innerHTML='<div class="gantt-empty"><div style="font-size:32px;">📅</div><div>No projects to display — adjust filters</div></div>';
+    return;
+  }
+
+  const minDateStr=allDates.length?allDates.reduce((a,b)=>a<b?a:b):today();
+  const maxDateStr=allDates.length?allDates.reduce((a,b)=>a>b?a:b):today();
+
+  // Extend range
+  const rangeStart=new Date(minDateStr);
+  rangeStart.setDate(rangeStart.getDate()-7);
+  const rangeEnd=new Date(maxDateStr);
+  rangeEnd.setDate(rangeEnd.getDate()+21);
+  const totalMs=rangeEnd-rangeStart;
+
+  // Px per day based on zoom
+  const pxPerDay = _ganttZoom==='week'?60 : _ganttZoom==='month'?18 : 6;
+  const totalDays=Math.ceil(totalMs/(1000*60*60*24));
+  const timelineW=Math.max(totalDays*pxPerDay, 800);
+
+  // Build period headers (months)
+  let periodCells='';
+  const cur=new Date(rangeStart);
+  cur.setDate(1);
+  while(cur<=rangeEnd){
+    const pxLeft=Math.max(0,(cur-rangeStart)/(1000*60*60*24)*pxPerDay);
+    const nextMonth=new Date(cur.getFullYear(), cur.getMonth()+1, 1);
+    const pxRight=Math.min(timelineW,(nextMonth-rangeStart)/(1000*60*60*24)*pxPerDay);
+    const w=pxRight-pxLeft;
+    if(w>0){
+      const label=cur.toLocaleDateString('en-IN',{month:'short',year:'2-digit'});
+      periodCells+=`<div class="gantt-period-cell" style="left:${pxLeft}px;width:${w}px;">${label}</div>`;
+    }
+    cur.setMonth(cur.getMonth()+1);
+  }
+
+  // Build gridlines (months)
+  let gridLines='';
+  const gc=new Date(rangeStart);
+  gc.setDate(1);
+  while(gc<=rangeEnd){
+    const px=(gc-rangeStart)/(1000*60*60*24)*pxPerDay;
+    gridLines+=`<div class="gantt-gridline" style="left:${px}px;"></div>`;
+    gc.setMonth(gc.getMonth()+1);
+  }
+
+  // Today line
+  const todayPx=(new Date(today())-rangeStart)/(1000*60*60*24)*pxPerDay;
+  const todayLine=`<div class="gantt-today-line" style="left:${todayPx}px;"></div><div class="gantt-today-label" style="left:${todayPx}px;">Today</div>`;
+
+  // Build rows
+  let leftRows='<div class="gantt-th">Project</div>';
+  let rightRows=`<div class="gantt-period-header" style="width:${timelineW}px;">${periodCells}</div>`;
+
+  visProjects.forEach(p=>{
+    leftRows+=`<div class="gantt-row"><div class="gantt-cell-label">
+      <div class="gantt-proj-no">${esc(p.no)}</div>
+      <div class="gantt-proj-sub">${esc(p.customer)}</div>
+    </div></div>`;
+
+    // Build stage bars
+    const stagesToShow = stF ? [stF] : STAGES;
+    let bars='';
+    stagesToShow.forEach((s,_idx)=>{
+      const stage=p[s];
+      const color=GANTT_STAGE_COLORS[s]||'#999';
+      const opacity=GANTT_STATUS_OPACITY[stage.status]||0.3;
+      const label=STAGE_LABELS[STAGES.indexOf(s)];
+
+      // Determine bar start: use earliest of deadline/date or just deadline
+      const barEndDate = stage.status==='Completed' && stage.date ? stage.date
+                        : stage.deadline || null;
+      if(!barEndDate) return; // no dates — skip
+
+      // Bar start = previous stage's deadline/date or rangeStart
+      const prevIdx=STAGES.indexOf(s)-1;
+      let barStartDate = null;
+      if(prevIdx>=0){
+        const prev=p[STAGES[prevIdx]];
+        barStartDate=prev.deadline||prev.date||null;
+      }
+      if(!barStartDate) barStartDate=minDateStr;
+
+      const x1=Math.max(0,(new Date(barStartDate)-rangeStart)/(1000*60*60*24)*pxPerDay);
+      const x2=Math.max(x1+4,(new Date(barEndDate)-rangeStart)/(1000*60*60*24)*pxPerDay);
+      const w=Math.max(4,x2-x1);
+
+      // Overdue indicator
+      const isOverdue=stage.status!=='Completed'&&stage.deadline&&stage.deadline<today();
+      const finalColor=isOverdue?'#D03020':color;
+
+      const barId=`bar_${esc(p.no)}_${s}`;
+      bars+=`<div class="gantt-bar" id="${barId}" style="left:${x1}px;width:${w}px;background:${finalColor};opacity:${opacity};"
+        onmouseenter="showGanttTooltip(event,'${esc(p.no)}','${esc(label)}','${esc(stage.status)}','${esc(stage.deadline||'')}','${esc(stage.date||'')}','${esc(stage.resp||'')}','${isOverdue}')"
+        onmouseleave="hideGanttTooltip()">
+        <span class="gantt-bar-inner">${label.substring(0,3)}</span>
+      </div>`;
+
+      // Deadline diamond marker
+      if(stage.deadline){
+        const dx=(new Date(stage.deadline)-rangeStart)/(1000*60*60*24)*pxPerDay;
+        bars+=`<div class="gantt-deadline-mark" style="left:${dx-5}px;background:${isOverdue?'#D03020':color};opacity:0.9;" title="Deadline: ${stage.deadline}"></div>`;
+      }
+    });
+
+    rightRows+=`<div class="gantt-timeline-row" style="width:${timelineW}px;">${gridLines}${todayLine}${bars}</div>`;
+  });
+
+  wrap.innerHTML=`
+  <div class="gantt-frame">
+    <div class="gantt-left-panel">${leftRows}</div>
+    <div class="gantt-right-panel">
+      <div style="position:relative;min-width:${timelineW}px;">
+        ${rightRows}
+      </div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-top:8px;padding:0 4px;">
+    📊 ${visProjects.length} project${visProjects.length!==1?'s':''} · Diamonds ◆ = target deadlines · Bars = stage spans · 🔴 Red = overdue
+  </div>`;
+}
+
+function showGanttTooltip(e,no,stage,status,deadline,actual,resp,isOverdue){
+  const t=document.getElementById('gantt-tooltip');
+  if(!t) return;
+  const slaHtml = status==='Completed'&&deadline&&actual
+    ? (actual<=deadline?'<div class="gantt-sla-chip gantt-sla-ontime">✓ On Time</div>':'<div class="gantt-sla-chip gantt-sla-late">⚠ Completed Late</div>')
+    : (!deadline ? '<div class="gantt-sla-chip gantt-sla-pending">No deadline set</div>'
+    : isOverdue==='true' ? '<div class="gantt-sla-chip gantt-sla-late">⚠ Overdue</div>'
+    : `<div class="gantt-sla-chip gantt-sla-pending">${status}</div>`);
+  t.innerHTML=`<div style="font-weight:700;font-family:'Rajdhani',sans-serif;font-size:13px;margin-bottom:5px;">${esc(no)} · ${esc(stage)}</div>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;font-size:11px;">
+      <span style="color:var(--muted);">Status</span><span>${esc(status)}</span>
+      ${deadline?`<span style="color:var(--muted);">Target</span><span>${esc(deadline)}</span>`:''}
+      ${actual?`<span style="color:var(--muted);">Actual</span><span>${esc(actual)}</span>`:''}
+      ${resp?`<span style="color:var(--muted);">By</span><span>${esc(resp)}</span>`:''}
+    </div>${slaHtml}`;
+  t.style.left=(e.clientX+14)+'px';
+  t.style.top=(e.clientY-8)+'px';
+  t.classList.add('visible');
+}
+
+function hideGanttTooltip(){
+  const t=document.getElementById('gantt-tooltip');
+  if(t) t.classList.remove('visible');
+}
+
+// Reposition tooltip on scroll
+document.addEventListener('scroll',hideGanttTooltip,true);
+
 // ── TABS ──
 let _activeTab = 'overview';
 function showTab(name,btn){
@@ -2560,6 +3222,8 @@ function showTab(name,btn){
   if(name==='salesperson'){ renderSalesperson(); }
   if(name==='wiring')    { renderWiringPersonList();renderWiringPlanner(); }
   if(name==='changelog') { renderChangelog(); }
+  if(name==='gantt')     { renderGantt(); }
+  if(name==='outside')   { renderOutsideProjects(); }
 }
 
 // ── REFRESH ALL — only re-renders active tab to avoid unnecessary work ──
@@ -2572,11 +3236,15 @@ function refreshAll(rerenderTable=true){
   if(_activeTab==='salesperson') { renderSalesperson(); }
   if(_activeTab==='wiring')    { renderWiringPlanner(); }
   if(_activeTab==='changelog') { renderChangelog(); }
+  if(_activeTab==='gantt')     { renderGantt(); }
   if(rerenderTable && _activeTab==='projects') renderProjects();
 }
 
-// ── INIT (async — loads from Supabase then renders everything) ──
+// ── INIT (async — checks auth, then loads from Supabase and renders) ──
 (async function init(){
+  // ── Check authentication first ──
+  await checkAuth();
+
   // Show loading skeleton while data fetches
   const tbody = document.getElementById('proj-tbody');
   if(tbody) tbody.innerHTML = `<tr><td colspan="15" style="padding:16px;">
@@ -2627,6 +3295,12 @@ function refreshAll(rerenderTable=true){
       const gs=document.getElementById('global-search');
       if(gs){ gs.focus(); gs.select(); }
     }
+    // Alt+G — jump to Gantt tab
+    if(e.altKey && (e.key==='g'||e.key==='G')){
+      e.preventDefault();
+      const btn=document.querySelector('.tab[onclick*="gantt"]');
+      if(btn){ showTab('gantt',btn); }
+    }
     // Escape — close any open modal
     if(e.key==='Escape'){
       document.querySelectorAll('.modal-overlay.open').forEach(m=>{
@@ -2676,6 +3350,247 @@ function toggleTheme(){
   try{ saved = localStorage.getItem('ail-theme') || 'light'; }catch(e){}
   applyTheme(saved);
 })();
+</script>
+
+<!-- ══ OUTSIDE PROJECT SCRIPT ══ -->
+<script>
+// ════════════════════════════════════════
+// OUTSIDE PROJECT — localStorage-backed
+// ════════════════════════════════════════
+const LS_OUTSIDE = 'ail_outside_projects_v1';
+let _opProjects = [];
+let _opEditId = null;
+
+function loadOutsideProjects(){
+  try{ _opProjects = JSON.parse(localStorage.getItem(LS_OUTSIDE)||'[]'); }
+  catch(e){ _opProjects=[]; }
+}
+
+function saveOutsideToStorage(){
+  try{ localStorage.setItem(LS_OUTSIDE, JSON.stringify(_opProjects)); }catch(e){}
+}
+
+function opVal(id){ return (document.getElementById(id)||{}).value?.trim()||''; }
+
+function saveOutsideProject(){
+  const cust    = opVal('op-f-cust');
+  const supplier = opVal('op-f-supplier');
+  const details = opVal('op-f-details');
+  const sales   = opVal('op-f-sales');
+  const start   = opVal('op-f-start');
+  const end     = opVal('op-f-end');
+  const remarks = opVal('op-f-remarks');
+  const dwgSupplierDate = opVal('op-f-dwg-supplier-date');
+  const dwgCustomerDate = opVal('op-f-dwg-customer-date');
+  const fatSupplierDate = opVal('op-f-fat-supplier-date');
+  const fatCustomerDate = opVal('op-f-fat-customer-date');
+  const dispatchSupplierDate = opVal('op-f-dispatch-supplier-date');
+  const dispatchCustomerDate = opVal('op-f-dispatch-customer-date');
+  const errEl   = document.getElementById('op-form-error');
+
+  if(!cust){ errEl.textContent='⚠ Customer Name is required.'; return; }
+  if(!details){ errEl.textContent='⚠ Project Details are required.'; return; }
+  errEl.textContent='';
+
+  loadOutsideProjects();
+
+  if(_opEditId !== null){
+    // Edit mode
+    const idx = _opProjects.findIndex(p=>p.id===_opEditId);
+    if(idx>=0){
+      _opProjects[idx] = { ..._opProjects[idx], cust, supplier, details, sales, start, end, remarks, dwgSupplierDate, dwgCustomerDate, fatSupplierDate, fatCustomerDate, dispatchSupplierDate, dispatchCustomerDate, updatedAt: new Date().toISOString() };
+    }
+    _opEditId = null;
+  } else {
+    // Add mode
+    _opProjects.push({
+      id: Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+      cust, supplier, details, sales, start, end, remarks, dwgSupplierDate, dwgCustomerDate, fatSupplierDate, fatCustomerDate, dispatchSupplierDate, dispatchCustomerDate,
+      createdAt: new Date().toISOString()
+    });
+  }
+
+  saveOutsideToStorage();
+  resetOPForm();
+  renderOutsideProjects();
+  showToast('Outside Project saved ✓');
+}
+
+function resetOPForm(){
+  ['op-f-cust','op-f-supplier','op-f-details','op-f-sales','op-f-remarks'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  ['op-f-start','op-f-end','op-f-dwg-supplier-date','op-f-dwg-customer-date','op-f-fat-supplier-date','op-f-fat-customer-date','op-f-dispatch-supplier-date','op-f-dispatch-customer-date'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('op-form-error').textContent='';
+  document.getElementById('op-save-btn').textContent='＋ Add Project';
+  document.getElementById('op-form-title').textContent='＋ Add Outside Project';
+  document.getElementById('op-cancel-btn').style.display='none';
+  _opEditId=null;
+}
+
+function cancelOutsideEdit(){ resetOPForm(); renderOutsideProjects(); }
+
+function editOutsideProject(id){
+  loadOutsideProjects();
+  const p = _opProjects.find(x=>x.id===id);
+  if(!p) return;
+  _opEditId = id;
+  document.getElementById('op-f-cust').value    = p.cust||'';
+  document.getElementById('op-f-supplier').value = p.supplier||'';
+  document.getElementById('op-f-details').value = p.details||'';
+  document.getElementById('op-f-sales').value   = p.sales||'';
+  document.getElementById('op-f-start').value   = p.start||'';
+  document.getElementById('op-f-end').value     = p.end||'';
+  document.getElementById('op-f-remarks').value = p.remarks||'';
+  document.getElementById('op-f-dwg-supplier-date').value = p.dwgSupplierDate||'';
+  document.getElementById('op-f-dwg-customer-date').value = p.dwgCustomerDate||'';
+  document.getElementById('op-f-fat-supplier-date').value = p.fatSupplierDate||'';
+  document.getElementById('op-f-fat-customer-date').value = p.fatCustomerDate||'';
+  document.getElementById('op-f-dispatch-supplier-date').value = p.dispatchSupplierDate||'';
+  document.getElementById('op-f-dispatch-customer-date').value = p.dispatchCustomerDate||'';
+  document.getElementById('op-save-btn').textContent='💾 Update Project';
+  document.getElementById('op-form-title').textContent='✏ Edit Outside Project';
+  document.getElementById('op-cancel-btn').style.display='inline-flex';
+  document.getElementById('op-form-error').textContent='';
+  document.getElementById('op-f-cust').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function deleteOutsideProject(id){
+  if(!confirm('Delete this outside project? This cannot be undone.')) return;
+  loadOutsideProjects();
+  _opProjects = _opProjects.filter(p=>p.id!==id);
+  saveOutsideToStorage();
+  renderOutsideProjects();
+  showToast('Outside Project deleted');
+}
+
+function opDuration(start,end){
+  if(!start||!end) return '—';
+  const d1=new Date(start), d2=new Date(end);
+  if(isNaN(d1)||isNaN(d2)||d2<d1) return '—';
+  const days=Math.round((d2-d1)/(1000*60*60*24));
+  if(days===0) return '1 day';
+  return days+' day'+(days!==1?'s':'');
+}
+
+function opFmtDate(d){ if(!d) return '—'; try{ return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }catch(e){ return d; } }
+
+function opStatusPill(start,end){
+  if(!start) return '';
+  const now=new Date(); now.setHours(0,0,0,0);
+  const s=new Date(start); const e=end?new Date(end):null;
+  if(e&&e<now) return '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--stage-done-bg);color:var(--stage-done-txt);border:1px solid var(--stage-done-bd);">✅ Completed</span>';
+  if(s<=now&&(!e||e>=now)) return '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--stage-running-bg);color:var(--stage-running-txt);border:1px solid var(--stage-running-bd);">⚡ Running</span>';
+  return '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--stage-pending-bg);color:var(--stage-pending-txt);border:1px solid var(--stage-pending-bd);">🕐 Upcoming</span>';
+}
+
+function clearOPFilters(){
+  ['op-search','op-date-from','op-date-to'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  renderOutsideProjects();
+}
+
+function renderOutsideProjects(){
+  loadOutsideProjects();
+
+  const search  = (document.getElementById('op-search')?.value||'').toLowerCase().trim();
+  const dateFrom= document.getElementById('op-date-from')?.value||'';
+  const dateTo  = document.getElementById('op-date-to')?.value||'';
+
+  let list = _opProjects.filter(p=>{
+    if(search && !`${p.cust} ${p.supplier} ${p.details} ${p.sales} ${p.remarks}`.toLowerCase().includes(search)) return false;
+    if(dateFrom && p.start && p.start < dateFrom) return false;
+    if(dateTo   && p.start && p.start > dateTo)   return false;
+    return true;
+  });
+
+  // newest first
+  list.sort((a,b)=> (b.createdAt||'').localeCompare(a.createdAt||''));
+
+  const tbody = document.getElementById('op-tbody');
+  const sumEl  = document.getElementById('op-summary');
+
+  if(sumEl) sumEl.textContent = list.length + ' record'+(list.length!==1?'s':'');
+
+  if(!list.length){
+    tbody.innerHTML=`<tr><td colspan="13"><div class="empty-state"><div class="empty-icon">🌐</div>${search||dateFrom||dateTo?'No records match your filters':'No outside projects yet — add one above'}</div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map((p,i)=>`
+    <tr>
+      <td style="font-weight:700;color:var(--muted);font-size:11px;">${i+1}</td>
+      <td style="font-weight:600;color:var(--dark);">${esc(p.cust)}</td>
+      <td style="font-size:12px;">${esc(p.supplier||'—')}</td>
+      <td>${esc(p.details)}<br>${opStatusPill(p.start,p.end)}</td>
+      <td>${p.sales?`<span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;flex-shrink:0;">${esc(p.sales.charAt(0).toUpperCase())}</span>${esc(p.sales)}</span>`:'<span style="color:var(--muted);">—</span>'}</td>
+      <td>${opFmtDate(p.start)}</td>
+      <td>${opFmtDate(p.end)}</td>
+      <td style="white-space:nowrap;font-size:11px;color:var(--muted);">${opDuration(p.start,p.end)}</td>
+      <td style="font-size:11px;color:var(--muted);">${opFmtDate(p.dwgSupplierDate)} <br/> ${opFmtDate(p.dwgCustomerDate)}</td>
+      <td style="font-size:11px;color:var(--muted);">${opFmtDate(p.fatSupplierDate)} <br/> ${opFmtDate(p.fatCustomerDate)}</td>
+      <td style="font-size:11px;color:var(--muted);">${opFmtDate(p.dispatchSupplierDate)} <br/> ${opFmtDate(p.dispatchCustomerDate)}</td>
+      <td style="font-size:12px;color:var(--muted);font-style:italic;">${p.remarks?esc(p.remarks):'—'}</td>
+      <td style="text-align:center;white-space:nowrap;">
+        <button class="del-btn admin-only" title="Edit" onclick="editOutsideProject('${esc(p.id)}')" style="color:var(--blue);font-size:14px;">✏</button>
+        <button class="del-btn admin-only" title="Delete" onclick="deleteOutsideProject('${esc(p.id)}')" style="font-size:14px;">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+
+// ── Outside Project PDF Export ──
+function exportOutsidePDF(){
+  loadOutsideProjects();
+  const search  = (document.getElementById('op-search')?.value||'').toLowerCase().trim();
+  const dateFrom= document.getElementById('op-date-from')?.value||'';
+  const dateTo  = document.getElementById('op-date-to')?.value||'';
+
+  let list = _opProjects.filter(p=>{
+    if(search && !`${p.cust} ${p.supplier} ${p.details} ${p.sales} ${p.remarks}`.toLowerCase().includes(search)) return false;
+    if(dateFrom && p.start && p.start < dateFrom) return false;
+    if(dateTo   && p.start && p.start > dateTo)   return false;
+    return true;
+  }).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+
+  const rows = list.map((p,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${esc(p.cust)}</td>
+      <td>${esc(p.supplier||'—')}</td>
+      <td>${esc(p.details)}</td>
+      <td>${esc(p.sales||'—')}</td>
+      <td>${opFmtDate(p.start)}</td>
+      <td>${opFmtDate(p.end)}</td>
+      <td>${opDuration(p.start,p.end)}</td>
+      <td>${opFmtDate(p.dwgSupplierDate)} / ${opFmtDate(p.dwgCustomerDate)}</td>
+      <td>${opFmtDate(p.fatSupplierDate)} / ${opFmtDate(p.fatCustomerDate)}</td>
+      <td>${opFmtDate(p.dispatchSupplierDate)} / ${opFmtDate(p.dispatchCustomerDate)}</td>
+      <td>${esc(p.remarks||'—')}</td>
+    </tr>`).join('');
+
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Outside Projects Report</title>
+  <style>
+    body{font-family:Arial,sans-serif;padding:24px;color:#111;}
+    h2{color:#E020A0;font-size:20px;margin-bottom:4px;}
+    p{font-size:12px;color:#666;margin-bottom:16px;}
+    table{width:100%;border-collapse:collapse;font-size:11px;}
+    th{background:#E020A0;color:#fff;padding:8px 10px;text-align:left;}
+    td{padding:6px 8px;border-bottom:1px solid #eee;}
+    tr:nth-child(even) td{background:#fdf0f8;}
+    @media print{body{padding:0;}}
+  </style></head><body>
+  <h2>🌐 Outside Projects Report</h2>
+  <p>Generated: ${new Date().toLocaleString('en-IN')} · ${list.length} record${list.length!==1?'s':''}</p>
+  <table><thead><tr><th>#</th><th>Customer</th><th>Supplier</th><th>Project Details</th><th>Sales Person</th><th>Start Date</th><th>End Date</th><th>Duration</th><th>Dwg Approval (S/C)</th><th>FAT (S/C)</th><th>Dispatch (S/C)</th><th>Remarks</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  <script>window.onload=()=>{window.print();}<\/script></body></html>`);
+  win.document.close();
+}
+
+// Auto-load on first render
+loadOutsideProjects();
 </script>
 
 <!-- ══ FOOTER ══ -->
