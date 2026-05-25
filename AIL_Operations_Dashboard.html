@@ -3096,9 +3096,8 @@ function clearCLFilters(){
 // ════════════════════════════════════════
 // AUTHENTICATION (Supabase Auth)
 // ════════════════════════════════════════
-// ADMIN_EMAILS: list of emails that get write access.
-// Leave the array EMPTY to grant admin to ALL authenticated users.
-// Add specific emails to restrict: e.g. ['manager@yourco.com']
+// ADMIN_EMAILS: fallback only — roles are now read from the ail_users Supabase table.
+// Leave empty []. Add emails here only if ail_users table is unavailable.
 const ADMIN_EMAILS = [];
 
 let _currentUser = null;
@@ -3107,14 +3106,14 @@ let _currentRole = 'viewer';
 async function checkAuth(){
   const { data: { session } } = await sbClient.auth.getSession();
   if(session?.user){
-    _applyUser(session.user);
+    await _applyUser(session.user);
     _showApp();
   } else {
     _showLogin();
   }
-  sbClient.auth.onAuthStateChange((event, session)=>{
+  sbClient.auth.onAuthStateChange(async (event, session)=>{
     if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED') && session?.user){
-      _applyUser(session.user);
+      await _applyUser(session.user);
       _showApp();
     } else if(event==='SIGNED_OUT'){
       _currentUser=null; _currentRole='viewer';
@@ -3123,18 +3122,49 @@ async function checkAuth(){
   });
 }
 
-function _applyUser(user){
+async function _applyUser(user){
   _currentUser = user;
-  _currentRole = (ADMIN_EMAILS.length===0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
-  const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
-  const nameEl=document.getElementById('user-display-name');
-  const avatarEl=document.getElementById('user-avatar');
-  const roleEl=document.getElementById('user-role-badge');
-  const infoEl=document.getElementById('user-info');
-  if(nameEl) nameEl.textContent=name;
-  if(avatarEl) avatarEl.textContent=initials(name);
-  if(roleEl){ roleEl.textContent=_currentRole==='admin'?'Admin':'Viewer'; roleEl.className='user-role-badge '+_currentRole; }
-  if(infoEl) infoEl.style.display='flex';
+
+  // ── Read role + name from ail_users Supabase table ──────────────────────
+  let name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+  let role = 'viewer'; // safe default
+
+  try {
+    const { data, error } = await sbClient
+      .from('ail_users')
+      .select('name, role')
+      .eq('email', user.email.toLowerCase())
+      .single();
+
+    if(data && !error){
+      if(data.role) role = data.role;   // 'admin' or 'viewer'
+      if(data.name) name = data.name;   // display name from table
+    } else if(error?.code === 'PGRST116'){
+      // User not found in ail_users table
+      console.warn('AIL: user not found in ail_users — defaulting to viewer');
+      showToast('⚠ Account not configured — contact your administrator');
+      role = 'viewer';
+    } else if(error){
+      // Table may not exist — fall back to ADMIN_EMAILS
+      console.warn('AIL: ail_users query failed, using ADMIN_EMAILS fallback', error.message);
+      role = (ADMIN_EMAILS.length===0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
+    }
+  } catch(e){
+    console.warn('AIL: _applyUser error', e);
+    role = (ADMIN_EMAILS.length===0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
+  }
+
+  _currentRole = role;
+
+  const nameEl   = document.getElementById('user-display-name');
+  const avatarEl = document.getElementById('user-avatar');
+  const roleEl   = document.getElementById('user-role-badge');
+  const infoEl   = document.getElementById('user-info');
+  if(nameEl)   nameEl.textContent   = name;
+  if(avatarEl) avatarEl.textContent = initials(name);
+  if(roleEl){  roleEl.textContent   = _currentRole==='admin' ? 'Admin' : 'Viewer';
+               roleEl.className     = 'user-role-badge ' + _currentRole; }
+  if(infoEl)   infoEl.style.display = 'flex';
 }
 
 async function signIn(){
