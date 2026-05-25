@@ -935,6 +935,71 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
   .mnav-btn{font-size:8px;min-height:50px;}
   .mnav-icon{font-size:16px;}
 }
+/* ═══════════════════════════════════════════════
+   NOTIFICATION SYSTEM
+═══════════════════════════════════════════════ */
+
+/* Bell button */
+.notif-bell-btn{position:relative;background:none;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:6px 10px;font-size:17px;cursor:pointer;color:rgba(255,255,255,0.7);transition:all .15s;line-height:1;flex-shrink:0;}
+.notif-bell-btn:hover{border-color:var(--pink);color:var(--pink);}
+.notif-bell-btn.ringing{animation:bellRing .5s ease-in-out;}
+@keyframes bellRing{0%,100%{transform:rotate(0)}25%{transform:rotate(-18deg)}75%{transform:rotate(18deg)}}
+.notif-bell-badge{position:absolute;top:-6px;right:-6px;background:#D03020;color:#fff;font-size:9px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #0D0D0D;pointer-events:none;line-height:1;}
+
+/* Notification Panel */
+.notif-overlay{position:fixed;inset:0;z-index:799;display:none;}
+.notif-overlay.open{display:block;}
+.notif-panel{position:fixed;top:66px;right:16px;width:340px;max-height:500px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:800;display:none;flex-direction:column;overflow:hidden;}
+.notif-panel.open{display:flex;animation:fadeIn .15s ease;}
+.notif-panel-head{background:linear-gradient(90deg,#111 0%,#202028 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.notif-panel-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;}
+.notif-panel-actions{display:flex;gap:5px;}
+.notif-head-btn{background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.notif-head-btn:hover{border-color:var(--pink);color:var(--pink);}
+.notif-perm-bar{background:var(--surface3);border-bottom:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);flex-shrink:0;}
+.notif-perm-bar button{background:var(--pink);color:#fff;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;}
+.notif-item-list{overflow-y:auto;flex:1;}
+.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);transition:background .15s;cursor:default;}
+.notif-item:last-child{border-bottom:none;}
+.notif-item:hover{background:var(--hover-row);}
+.notif-item.n-unread{background:var(--pink-pale);}
+.notif-item-icon{font-size:18px;flex-shrink:0;margin-top:1px;line-height:1;}
+.notif-item-body{flex:1;min-width:0;}
+.notif-item-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px;}
+.notif-item.n-unread .notif-item-title::before{content:'● ';color:var(--pink);font-size:8px;vertical-align:middle;}
+.notif-item-text{font-size:11px;color:var(--muted);line-height:1.4;word-break:break-word;}
+.notif-item-time{font-size:10px;color:var(--muted);margin-top:3px;opacity:.7;}
+.notif-empty{padding:28px 14px;text-align:center;color:var(--muted);font-size:13px;}
+.notif-empty-icon{font-size:28px;margin-bottom:8px;}
+
+/* Notification Preferences Modal */
+.npref-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.npref-row:last-child{border-bottom:none;}
+.npref-info{flex:1;min-width:0;}
+.npref-label{font-size:13px;font-weight:500;color:var(--text);}
+.npref-sub{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.notif-enable-btn{background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.3px;white-space:nowrap;}
+.npref-granted{color:var(--green);font-size:12px;font-weight:600;}
+.npref-denied{color:#D03020;font-size:11px;}
+/* Toggle switch */
+.npref-sw{position:relative;display:inline-block;width:40px;height:22px;cursor:pointer;flex-shrink:0;}
+.npref-sw input{opacity:0;width:0;height:0;position:absolute;}
+.npref-track{position:absolute;inset:0;background:var(--border);border-radius:11px;transition:background .2s;}
+.npref-sw input:checked+.npref-track{background:var(--pink);}
+.npref-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none;}
+.npref-sw input:checked+.npref-track>.npref-knob{transform:translateX(18px);}
+
+/* In-app toast banner (top) for realtime changes */
+.notif-toast-banner{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#111,#202028);border:1px solid var(--pink);border-radius:10px;padding:10px 18px;font-size:13px;color:#fff;z-index:900;display:none;align-items:center;gap:10px;max-width:90vw;box-shadow:0 4px 20px rgba(224,32,160,0.3);font-family:'Inter',sans-serif;}
+.notif-toast-banner.show{display:flex;animation:slideDown .25s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.ntb-close{background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:16px;padding:0 2px;line-height:1;margin-left:4px;}
+
+@media(max-width:768px){
+  .notif-panel{right:8px;left:8px;width:auto;top:60px;max-height:65vh;}
+  .notif-toast-banner{top:62px;width:calc(100vw - 24px);}
+}
+
 
 /* ═══ ENHANCEMENTS v2 ═══════════════════════════════════════════════════════ */
 
@@ -1069,6 +1134,29 @@ if('serviceWorker' in navigator){
   <div class="m-drawer" id="m-drawer-content"></div>
 </div>
 
+<!-- NOTIFICATION PANEL OVERLAY -->
+<div class="notif-overlay" id="notif-overlay" onclick="closeNotifPanel()"></div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notif-panel"></div>
+
+<!-- REALTIME CHANGE TOAST BANNER -->
+<div class="notif-toast-banner" id="ntb">
+  <span id="ntb-msg">🔄 Data updated</span>
+  <button class="ntb-close" onclick="closeNotifToast()">✕</button>
+</div>
+
+<!-- NOTIFICATION PREFERENCES MODAL -->
+<div class="modal-overlay" id="notif-prefs-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🔔 Notification Settings</h3>
+      <button class="modal-close" onclick="document.getElementById('notif-prefs-modal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body" id="notif-prefs-body" style="padding:18px;max-height:70vh;overflow-y:auto;"></div>
+  </div>
+</div>
+
 <div class="dash">
 
 <div class="header">
@@ -1095,6 +1183,10 @@ if('serviceWorker' in navigator){
         </div>
         <button class="logout-btn" onclick="signOut()" title="Sign out">Sign Out</button>
       </div>
+      <!-- Notification Bell -->
+      <button class="notif-bell-btn" id="notif-bell" onclick="toggleNotifPanel()" aria-label="Notifications" title="Notifications">
+        🔔<span class="notif-bell-badge" id="notif-badge" style="display:none"></span>
+      </button>
   </div>
   <div class="header-subtitle">
     Operations Management System
@@ -3096,7 +3188,9 @@ function clearCLFilters(){
 // ════════════════════════════════════════
 // AUTHENTICATION (Supabase Auth)
 // ════════════════════════════════════════
-// ADMIN_EMAILS: list of emails that get write access.
+// ADMIN_EMAILS: fallback list if ail_users table is unavailable.
+// Roles are now read from the ail_users Supabase table (email, role columns).
+// Leave this empty [] — the table controls access.
 // Leave the array EMPTY to grant admin to ALL authenticated users.
 // Add specific emails to restrict: e.g. ['manager@yourco.com']
 const ADMIN_EMAILS = [];
@@ -3107,14 +3201,14 @@ let _currentRole = 'viewer';
 async function checkAuth(){
   const { data: { session } } = await sbClient.auth.getSession();
   if(session?.user){
-    _applyUser(session.user);
+    await _applyUser(session.user);
     _showApp();
   } else {
     _showLogin();
   }
-  sbClient.auth.onAuthStateChange((event, session)=>{
+  sbClient.auth.onAuthStateChange(async (event, session)=>{
     if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED') && session?.user){
-      _applyUser(session.user);
+      await _applyUser(session.user);
       _showApp();
     } else if(event==='SIGNED_OUT'){
       _currentUser=null; _currentRole='viewer';
@@ -3123,18 +3217,49 @@ async function checkAuth(){
   });
 }
 
-function _applyUser(user){
+async function _applyUser(user){
   _currentUser = user;
-  _currentRole = (ADMIN_EMAILS.length===0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
-  const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
-  const nameEl=document.getElementById('user-display-name');
-  const avatarEl=document.getElementById('user-avatar');
-  const roleEl=document.getElementById('user-role-badge');
-  const infoEl=document.getElementById('user-info');
-  if(nameEl) nameEl.textContent=name;
-  if(avatarEl) avatarEl.textContent=initials(name);
-  if(roleEl){ roleEl.textContent=_currentRole==='admin'?'Admin':'Viewer'; roleEl.className='user-role-badge '+_currentRole; }
-  if(infoEl) infoEl.style.display='flex';
+
+  // ── Fetch role + display name from ail_users table ──────────────────────
+  let name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+  let role = 'viewer'; // safe default
+
+  try {
+    const { data, error } = await sbClient
+      .from('ail_users')
+      .select('name, role')
+      .eq('email', user.email.toLowerCase())
+      .single();
+
+    if (data && !error) {
+      if (data.role) role = data.role;           // 'admin' or 'viewer'
+      if (data.name) name = data.name;           // display name from table
+    } else if (error?.code === 'PGRST116') {
+      // User not found in ail_users table
+      console.warn('AIL: user not in ail_users table — defaulting to viewer');
+      showToast('⚠ Account not configured — contact your administrator');
+      role = 'viewer';
+    } else if (error) {
+      // Table may not exist yet — fall back to ADMIN_EMAILS for safety
+      console.warn('AIL: ail_users query failed, using ADMIN_EMAILS fallback', error.message);
+      role = (ADMIN_EMAILS.length === 0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
+    }
+  } catch(e) {
+    console.warn('AIL: _applyUser error', e);
+    role = (ADMIN_EMAILS.length === 0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
+  }
+
+  _currentRole = role;
+
+  const nameEl   = document.getElementById('user-display-name');
+  const avatarEl = document.getElementById('user-avatar');
+  const roleEl   = document.getElementById('user-role-badge');
+  const infoEl   = document.getElementById('user-info');
+  if(nameEl)   nameEl.textContent   = name;
+  if(avatarEl) avatarEl.textContent = initials(name);
+  if(roleEl){  roleEl.textContent   = _currentRole === 'admin' ? 'Admin' : 'Viewer';
+               roleEl.className     = 'user-role-badge ' + _currentRole; }
+  if(infoEl)   infoEl.style.display = 'flex';
 }
 
 async function signIn(){
@@ -3485,6 +3610,7 @@ function refreshAll(rerenderTable=true){
   renderProjFilter();
   renderProjects();
   refreshAll(false);
+  NotifMgr.init();
 
   // ── SUPABASE REALTIME — multi-user live sync ──
   try {
@@ -3494,6 +3620,7 @@ function refreshAll(rerenderTable=true){
         refreshSalesDropdown(); refreshCustDropdown();
         renderProjFilter(); refreshAll(true);
         setCloudStatus(true,'☁ Live sync ✓');
+        NotifMgr.onRealtimeChange();
       })
       .subscribe();
   } catch(e){ console.warn('Realtime subscription failed',e); }
@@ -4089,6 +4216,271 @@ window.refreshAll = function(rerenderTable){
   _origRefreshAll(rerenderTable);
   updateMobileNavBadges();
   renderTodayFocus();
+};
+
+
+
+// ════════════════════════════════════════════════════════════════════════
+// PUSH NOTIFICATION SYSTEM
+// ════════════════════════════════════════════════════════════════════════
+
+const NotifMgr = (function(){
+  const HIST_KEY  = 'ail_notif_hist_v1';
+  const PREFS_KEY = 'ail_notif_prefs_v1';
+  const DAY_KEY   = 'ail_notif_day_';
+  const MAX_HIST  = 60;
+  let _unread = 0;
+  let _checkTimer = null;
+  let _knownOverdueIds = new Set();
+  let _lastChangelogLen = 0;
+  let _ntbTimer = null;
+
+  function _defaultPrefs(){
+    return { overdue:true, upcoming:true, realtimeChanges:true, dailySummary:true, newProject:true, sound:false };
+  }
+  function getPrefs(){ try{ return Object.assign(_defaultPrefs(), JSON.parse(localStorage.getItem(PREFS_KEY)||'{}')); } catch(e){ return _defaultPrefs(); } }
+  function savePrefs(p){ localStorage.setItem(PREFS_KEY, JSON.stringify(p)); }
+
+  function getHist(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); } catch(e){ return []; } }
+  function saveHist(h){ localStorage.setItem(HIST_KEY, JSON.stringify(h.slice(0,MAX_HIST))); }
+
+  function addToHist(item){
+    const h = getHist();
+    h.unshift({...item, ts: Date.now(), time: new Date().toLocaleString('en-IN',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}), id: Date.now()+Math.random(), read:false});
+    saveHist(h);
+    _unread = h.filter(x=>!x.read).length;
+    _updateBadge();
+  }
+
+  function markAllRead(){
+    const h = getHist().map(x=>({...x,read:true}));
+    saveHist(h);
+    _unread = 0;
+    _updateBadge();
+  }
+
+  function clearHist(){ saveHist([]); _unread=0; _updateBadge(); }
+
+  function _updateBadge(){
+    const b = document.getElementById('notif-badge');
+    const bell = document.getElementById('notif-bell');
+    if(b){ b.textContent=_unread>9?'9+':_unread||''; b.style.display=_unread>0?'flex':'none'; }
+    if(bell){ bell.classList.toggle('ringing', _unread>0); }
+  }
+
+  // ── Browser Notification permission ──
+  async function requestPermission(){
+    if(!('Notification' in window)) return 'unsupported';
+    if(Notification.permission==='granted') return 'granted';
+    if(Notification.permission==='denied') return 'denied';
+    return await Notification.requestPermission();
+  }
+
+  // ── Core notify function ──
+  function notify(title, body, opts={}){
+    const prefs = getPrefs();
+    const type = opts.type||'info';
+    if(type in prefs && prefs[type]===false) return;
+    addToHist({title, body, icon:opts.icon||'🔔', type});
+    // Show browser notification if permitted
+    if(Notification.permission==='granted'){
+      try{
+        const n = new Notification(title, {
+          body,
+          icon: 'icon-192.png',
+          badge: 'icon-192.png',
+          tag: opts.tag||type,
+          silent: !prefs.sound,
+          requireInteraction: opts.sticky||false,
+        });
+        n.onclick = () => { window.focus(); n.close(); if(opts.onClick) opts.onClick(); };
+        if(!opts.sticky) setTimeout(()=>n.close(), 8000);
+      } catch(e){ console.warn('Notification error', e); }
+    }
+  }
+
+  // ── Check overdue stages ──
+  function checkOverdue(){
+    if(!getPrefs().overdue) return;
+    const td = today();
+    const newOD = [];
+    projects.forEach(p=>{
+      STAGES.forEach((s,i)=>{
+        const sd = p[s];
+        if(sd && sd.status!=='Completed' && sd.deadline && sd.deadline<td){
+          const id = p.no+'-'+s;
+          if(!_knownOverdueIds.has(id)){ _knownOverdueIds.add(id); newOD.push({no:p.no,cust:p.customer,stage:STAGE_LABELS[i],dl:sd.deadline}); }
+        }
+      });
+    });
+    if(newOD.length===1){
+      const r=newOD[0];
+      notify(`⚠️ Overdue: ${r.no}`,`${r.stage} was due ${r.dl} · ${r.cust}`,{type:'overdue',icon:'⚠️',tag:'od-'+r.no+'-'+r.stage});
+    } else if(newOD.length>1){
+      const projs=[...new Set(newOD.map(x=>x.no))];
+      notify(`⚠️ ${newOD.length} overdue stages`,`Projects: ${projs.slice(0,4).join(', ')}${projs.length>4?' +more':''}`,{type:'overdue',icon:'⚠️',tag:'od-batch'});
+    }
+  }
+
+  // ── Check upcoming deadlines (once per day) ──
+  function checkUpcoming(){
+    if(!getPrefs().upcoming) return;
+    const dayK = DAY_KEY+'upcoming-'+today();
+    if(localStorage.getItem(dayK)) return;
+    const td=today(); const in3=new Date(); in3.setDate(in3.getDate()+3); const in3s=in3.toISOString().slice(0,10);
+    const due=[];
+    projects.forEach(p=>{ STAGES.forEach((s,i)=>{ const sd=p[s]; if(sd&&sd.status!=='Completed'&&sd.deadline>=td&&sd.deadline<=in3s) due.push({no:p.no,stage:STAGE_LABELS[i],dl:sd.deadline}); }); });
+    if(due.length){
+      localStorage.setItem(dayK,'1');
+      notify(`📅 ${due.length} deadline${due.length>1?'s':''} in 3 days`, due.slice(0,3).map(d=>`${d.no} · ${d.stage} (${d.dl})`).join('
+'), {type:'upcoming',icon:'📅',tag:'upcoming'});
+    }
+  }
+
+  // ── Daily summary (once per day, morning) ──
+  function checkDailySummary(){
+    if(!getPrefs().dailySummary) return;
+    if(new Date().getHours()<8) return;
+    const dayK=DAY_KEY+'summary-'+today();
+    if(localStorage.getItem(dayK)) return;
+    if(!projects.length) return;
+    const td=today(); let ov=0,run=0,done=0;
+    projects.forEach(p=>{ STAGES.forEach(s=>{ const sd=p[s]; if(!sd)return; if(sd.status==='Running')run++; if(sd.status!=='Completed'&&sd.deadline&&sd.deadline<td)ov++; if(sd.status==='Completed'&&sd.date===td)done++; }); });
+    localStorage.setItem(dayK,'1');
+    notify('🌅 AIL Daily Summary',`${run} running · ${ov} overdue · ${done} completed today · ${projects.length} total projects`,{type:'dailySummary',icon:'📊',tag:'daily'});
+  }
+
+  // ── Realtime change notification ──
+  function onRealtimeChange(){
+    if(!getPrefs().realtimeChanges) return;
+    if(changelog.length===0) return;
+    if(changelog.length<=_lastChangelogLen) return;
+    const n=changelog[0];
+    _lastChangelogLen=changelog.length;
+    // Don't notify for own saves (check against logged-in user)
+    const myName=(document.getElementById('user-display-name')||{}).textContent||'';
+    if(myName && n.resp && n.resp.toLowerCase().includes(myName.toLowerCase().split(' ')[0])) return;
+    // Show banner
+    _showBanner(`🔄 ${n.project}: ${n.stage} → ${n.change.substring(0,50)}`);
+    notify(`🔄 ${n.project} updated`,`${n.stage}: ${n.change} · by ${n.resp||'—'}`,{type:'realtimeChanges',icon:'🔄',tag:'rt-'+n.project});
+  }
+
+  // ── New project notification ──
+  function onNewProject(proj){
+    if(!getPrefs().newProject) return;
+    notify(`📁 New project added`,`${proj.no} · ${proj.customer} (${proj.priority} priority)`,{type:'newProject',icon:'📁',tag:'newp-'+proj.no});
+  }
+
+  // ── Top banner for realtime ──
+  function _showBanner(msg){
+    const b=document.getElementById('ntb'); const m=document.getElementById('ntb-msg');
+    if(!b||!m) return;
+    m.textContent=msg; b.classList.add('show');
+    clearTimeout(_ntbTimer);
+    _ntbTimer=setTimeout(()=>b.classList.remove('show'),4500);
+  }
+
+  // ── Render notification panel ──
+  function renderPanel(){
+    const p=document.getElementById('notif-panel'); if(!p) return;
+    markAllRead();
+    const hist=getHist();
+    const perm=('Notification' in window)?Notification.permission:'unsupported';
+    const permBar = perm!=='granted' ? `<div class="notif-perm-bar"><span>${perm==='denied'?'🚫 Notifications blocked in browser settings':'Enable system notifications (lock screen, banners)'}</span>${perm!=='denied'?`<button onclick="NotifMgr.requestPermission().then(()=>NotifMgr.renderPanel())">Enable</button>`:''}</div>` : '';
+    const items = hist.length ? hist.map(n=>`<div class="notif-item${n.read?'':' n-unread'}"><div class="notif-item-icon">${n.icon||'🔔'}</div><div class="notif-item-body"><div class="notif-item-title">${esc(n.title)}</div><div class="notif-item-text">${esc(n.body)}</div><div class="notif-item-time">${esc(n.time)}</div></div></div>`).join('')
+      : '<div class="notif-empty"><div class="notif-empty-icon">🔔</div>No notifications yet<br><small style="font-size:10px;margin-top:4px;display:block;">Overdue alerts and updates appear here</small></div>';
+    p.innerHTML = `<div class="notif-panel-head"><span class="notif-panel-title">🔔 Notifications</span><div class="notif-panel-actions"><button class="notif-head-btn" onclick="NotifMgr.showPrefs()" title="Settings">⚙ Settings</button><button class="notif-head-btn" onclick="NotifMgr.clearHist();NotifMgr.renderPanel()">Clear all</button><button class="notif-head-btn" onclick="closeNotifPanel()">✕</button></div></div>${permBar}<div class="notif-item-list">${items}</div>`;
+  }
+
+  // ── Show preferences ──
+  function showPrefs(){
+    const prefs=getPrefs();
+    const perm=('Notification' in window)?Notification.permission:'unsupported';
+    const modal=document.getElementById('notif-prefs-modal');
+    const body=document.getElementById('notif-prefs-body');
+    if(!modal||!body) return;
+    closeNotifPanel();
+    const permRow=`<div class="npref-row"><div class="npref-info"><div class="npref-label">Browser permission</div><div class="npref-sub">Required for system notifications — lock screen, banners, notification centre</div></div><div>${perm==='granted'?'<span class="npref-granted">✓ Allowed</span>':perm==='denied'?'<span class="npref-denied">Blocked — change in browser settings</span>':`<button class="notif-enable-btn" onclick="NotifMgr.requestPermission().then(()=>NotifMgr.showPrefs())">Allow Notifications</button>`}</div></div>`;
+    const toggleRows=[
+      {key:'overdue',    icon:'⚠️', label:'Overdue alerts',         sub:'When any stage passes its deadline'},
+      {key:'upcoming',   icon:'📅', label:'Upcoming deadlines',      sub:'Stages with deadlines in the next 3 days (once daily)'},
+      {key:'realtimeChanges',icon:'🔄',label:'Live change alerts',    sub:'When another device or user updates a project'},
+      {key:'newProject', icon:'📁', label:'New project alerts',       sub:'When a new project is added to the system'},
+      {key:'dailySummary',icon:'🌅',label:'Daily summary',            sub:'Morning digest — running, overdue, completed counts'},
+      {key:'sound',      icon:'🔊', label:'Notification sound',       sub:'Play an alert tone with each notification'},
+    ].map(t=>`<div class="npref-row"><div class="npref-info"><div class="npref-label">${t.icon} ${t.label}</div><div class="npref-sub">${t.sub}</div></div><label class="npref-sw"><input type="checkbox" ${prefs[t.key]?'checked':''} onchange="NotifMgr.togglePref('${t.key}',this.checked)"><span class="npref-track"><span class="npref-knob"></span></span></label></div>`).join('');
+    body.innerHTML=permRow+toggleRows+`<div style="margin-top:12px;padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);"><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">📱 Background push (app closed)</div><div style="font-size:11px;color:var(--muted);line-height:1.6;">Notifications shown above work while the app is open or running as a PWA. For push when the app is fully closed, a Supabase Edge Function is needed. Tap below for setup guide.</div><button onclick="NotifMgr.showPushGuide()" style="margin-top:8px;font-size:11px;padding:5px 12px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--blue);cursor:pointer;font-family:Inter,sans-serif;">View setup guide →</button></div>`;
+    modal.classList.add('open');
+  }
+
+  function togglePref(key,val){ const p=getPrefs(); p[key]=val; savePrefs(p); }
+
+  function showPushGuide(){
+    document.getElementById('notif-prefs-modal')?.classList.remove('open');
+    showToast('📋 Push guide — see README in your files');
+    notify('📋 Background Push Setup',
+      '1. Create Supabase table: ail_push_subscriptions
+2. Deploy Edge Function (see PUSH_SETUP.md)
+3. Users subscribe automatically when they open the app',
+      {type:'info',icon:'📋'});
+  }
+
+  // ── Init ──
+  function init(){
+    // Restore unread count
+    _unread=getHist().filter(x=>!x.read).length;
+    _lastChangelogLen=changelog.length;
+    _updateBadge();
+    // Initial checks (after a short delay to let data load)
+    setTimeout(()=>{
+      checkOverdue();
+      checkUpcoming();
+      checkDailySummary();
+    }, 2000);
+    // Periodic overdue check every 15 min
+    _checkTimer=setInterval(checkOverdue, 15*60*1000);
+  }
+
+  return { notify, requestPermission, checkOverdue, checkUpcoming, checkDailySummary,
+    onRealtimeChange, onNewProject, renderPanel, showPrefs, togglePref, showPushGuide,
+    clearHist, init, getPrefs, getHist };
+})();
+
+// ── Panel toggle helpers ──────────────────────────────────────────────────────
+function toggleNotifPanel(){
+  const panel=document.getElementById('notif-panel');
+  const overlay=document.getElementById('notif-overlay');
+  if(!panel) return;
+  const isOpen=panel.classList.contains('open');
+  if(isOpen){ closeNotifPanel(); return; }
+  NotifMgr.renderPanel();
+  panel.classList.add('open');
+  overlay.classList.add('open');
+}
+function closeNotifPanel(){
+  document.getElementById('notif-panel')?.classList.remove('open');
+  document.getElementById('notif-overlay')?.classList.remove('open');
+}
+function closeNotifToast(){
+  const b=document.getElementById('ntb'); if(b)b.classList.remove('show');
+}
+
+// ── Hook NotifMgr into existing code ─────────────────────────────────────────
+
+// Override addProject to fire new-project notification
+const _origAddProject=window.addProject||addProject;
+function addProject(){
+  const prevLen=projects.length;
+  _origAddProject.apply(this,arguments);
+  if(projects.length>prevLen) NotifMgr.onNewProject(projects[projects.length-1]);
+}
+
+// Override refreshAll to run badge + overdue checks
+const _origRefreshAll2=window.refreshAll;
+window.refreshAll=function(rt){
+  _origRefreshAll2(rt);
+  NotifMgr.onRealtimeChange();
+  setTimeout(NotifMgr.checkOverdue,300);
 };
 
 
