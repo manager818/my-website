@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AIL Operations Management</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#E020A0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AIL Ops">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -828,7 +834,191 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 .gantt-sla-late{background:var(--pill-high-bg);color:var(--pill-high-txt);}
 .gantt-sla-pending{background:var(--stage-pending-bg);color:var(--stage-pending-txt);}
 
+/* ═══════════════════════════════════════════════
+   MOBILE PWA — RESPONSIVE OVERRIDES
+═══════════════════════════════════════════════ */
+.mobile-proj-cards{display:none;}
+.m-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.m-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;}
+.m-proj-no{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--dark);}
+.m-proj-cust{font-size:13px;color:var(--text);margin-bottom:5px;font-weight:500;}
+.m-proj-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.m-proj-meta span{font-size:11px;color:var(--muted);}
+.m-stage-row{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.m-stage-row::-webkit-scrollbar{display:none;}
+.m-stage-chip{flex-shrink:0;text-align:center;padding:6px 9px;border-radius:8px;min-width:68px;border:1.5px solid transparent;cursor:pointer;transition:transform .1s;}
+.m-stage-chip:active{transform:scale(0.95);}
+.m-chip-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:3px;}
+.m-chip-status{font-size:10px;font-weight:700;}
+.m-chip-comp{background:var(--stage-done-bg);border-color:var(--stage-done-bd);}
+.m-chip-comp .m-chip-status{color:var(--stage-done-txt);}
+.m-chip-run{background:var(--stage-running-bg);border-color:var(--stage-running-bd);}
+.m-chip-run .m-chip-status{color:var(--stage-running-txt);}
+.m-chip-pend{background:var(--stage-pending-bg);border-color:var(--stage-pending-bd);}
+.m-chip-pend .m-chip-status{color:var(--stage-pending-txt);}
+.m-expand-btn{width:100%;background:none;border:1px solid var(--border);border-radius:7px;padding:8px;color:var(--muted);font-size:12px;cursor:pointer;margin-top:8px;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s;}
+.m-expand-btn:hover,.m-expand-btn:active{border-color:var(--pink);color:var(--pink);}
+.m-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:2000;display:none;align-items:flex-end;}
+.m-drawer-overlay.open{display:flex;}
+.m-drawer{background:var(--modal-bg);border-radius:22px 22px 0 0;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(24px + env(safe-area-inset-bottom));}
+.m-drawer-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;}
+.m-drawer-head{padding:12px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.m-drawer-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--dark);}
+.m-drawer-sub{font-size:12px;color:var(--muted);margin-top:1px;}
+.m-drawer-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0 4px;line-height:1;}
+.m-drawer-body{padding:14px 18px;}
+.m-stage-section{margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);}
+.m-stage-section-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:10px;}
+.m-field{margin-bottom:10px;}
+.m-field label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.m-field select,.m-field input{width:100%;font-size:13px;padding:9px 11px;border-radius:7px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);outline:none;font-family:'Inter',sans-serif;}
+.m-field select:focus,.m-field input:focus{border-color:var(--pink);}
+.m-field textarea{width:100%;font-size:13px;padding:9px 11px;border-radius:7px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);outline:none;font-family:'Inter',sans-serif;resize:vertical;min-height:64px;}
+.m-field textarea:focus{border-color:var(--pink);}
+.m-save-btn{width:100%;background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff;border:none;border-radius:9px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;margin-top:4px;}
+.m-save-btn:active{opacity:.85;}
+.m-del-btn{width:100%;background:none;border:1px solid var(--del-hover-bg);color:var(--del-hover-txt);border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(0deg,#0D0D0D 0%,#1A0A14 100%);border-top:2px solid var(--pink);z-index:500;}
+.mobile-nav-inner{display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom);}
+.mnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:9px;cursor:pointer;min-height:54px;gap:3px;transition:color .15s;font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.02em;line-height:1;}
+.mnav-btn.active{color:var(--pink);}
+.mnav-btn:active{opacity:.7;}
+.mnav-icon{font-size:18px;line-height:1;}
+.flex-1{flex:1;min-width:0;}
+.m-add-toggle{display:none;width:100%;background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff;border:none;border-radius:var(--radius);padding:11px 16px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;margin-bottom:10px;align-items:center;justify-content:center;gap:6px;}
+@media(max-width:768px){
+  .mobile-nav{display:block;}
+  .mobile-proj-cards{display:block;}
+  .m-add-toggle{display:flex;}
+  .tab-bar{display:none!important;}
+  .proj-scroll{display:none!important;}
+  .dash{padding:8px 8px 72px 8px;}
+  body{overflow-x:hidden;}
+  .header-logo-bar{padding:5px 10px;}
+  .logo-img{height:44px;}
+  .header-right{gap:8px;}
+  .user-name-wrap{display:none;}
+  .storage-bar{display:none;}
+  .metrics{grid-template-columns:repeat(2,1fr)!important;gap:8px;}
+  .metric{padding:10px 12px;}
+  .metric-val{font-size:24px;}
+  .metric-label{font-size:9px;}
+  .stage-health-grid{grid-template-columns:repeat(2,1fr)!important;gap:6px;}
+  .bottom-grid{grid-template-columns:1fr!important;gap:10px;}
+  .pipeline{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+  .add-panel.admin-only{display:none;}
+  .add-panel.admin-only.m-open{display:block!important;}
+  .form-grid{grid-template-columns:1fr!important;gap:8px;}
+  .add-panel{padding:12px;}
+  .add-btn{margin-top:8px;width:100%;}
+  .wp-summary{grid-template-columns:repeat(2,1fr)!important;}
+  .wp-table-wrap,.log-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .wp-table,.log-table,.sales-table{min-width:560px;}
+  .login-overlay{align-items:center;justify-content:center;}
+  .login-card{margin:16px;border-radius:14px;width:calc(100% - 32px);max-width:400px;}
+  .card-header{padding:8px 12px;font-size:13px;flex-wrap:wrap;gap:6px;}
+  .cl-filter-bar,.date-range-bar,.wp-filter-bar{flex-direction:column;align-items:stretch!important;gap:7px;}
+  .cl-filter-bar select,.cl-filter-bar input,.date-range-bar input,.wp-filter-bar select,.wp-filter-bar input{width:100%!important;}
+  .ch-filter-select,.ch-date-input{width:100%!important;}
+  .gantt-frame{min-height:180px;}
+  .gantt-right-panel{-webkit-overflow-scrolling:touch;}
+  .modal-overlay{align-items:flex-end;}
+  .modal{border-radius:16px 16px 0 0;width:100%;max-width:100%;}
+  .pagination-bar{flex-direction:column;gap:8px;align-items:stretch;}
+  .ss-wrapper{width:100%!important;}
+  .section-title{font-size:9px;}
+  .bulk-action-bar{flex-wrap:wrap;gap:6px;}
+  .donut-wrap{flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:420px){
+  .metric-val{font-size:20px;}
+  .mnav-btn{font-size:8px;min-height:50px;}
+  .mnav-icon{font-size:16px;}
+}
+
+/* ═══ ENHANCEMENTS v2 ═══════════════════════════════════════════════════════ */
+
+/* Card entrance animation */
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes drawerUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(224,32,160,.4)}70%{box-shadow:0 0 0 8px rgba(224,32,160,0)}100%{box-shadow:0 0 0 0 rgba(224,32,160,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Mobile card progress bar */
+.m-card-prog-wrap{margin-top:10px;display:flex;align-items:center;gap:8px;}
+.m-card-prog-track{flex:1;height:5px;border-radius:3px;background:var(--border);overflow:hidden;}
+.m-card-prog-fill{height:100%;border-radius:3px;transition:width .4s ease;}
+.m-card-prog-label{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;min-width:30px;text-align:right;}
+
+/* Health border on mobile cards */
+.m-card.health-done{border-left:4px solid var(--green);}
+.m-card.health-run{border-left:4px solid var(--pink);}
+.m-card.health-overdue{border-left:4px solid #D03020;}
+.m-card.health-pend{border-left:4px solid var(--border);}
+
+/* Nav badge */
+.mnav-badge{position:absolute;top:6px;right:calc(50% - 14px);background:#D03020;color:#fff;font-size:8px;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;pointer-events:none;line-height:1;}
+.mnav-btn{position:relative;}
+
+/* Pull to refresh indicator */
+.pull-indicator{position:fixed;top:0;left:50%;transform:translateX(-50%);background:var(--pink);color:#fff;font-size:11px;font-weight:700;padding:6px 18px;border-radius:0 0 12px 12px;z-index:600;opacity:0;transition:opacity .2s;pointer-events:none;font-family:'Rajdhani',sans-serif;letter-spacing:.04em;display:flex;align-items:center;gap:6px;}
+.pull-indicator.show{opacity:1;}
+.pull-spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+
+/* Today's Focus card */
+.focus-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);}
+.focus-header{background:linear-gradient(90deg,#111 0%,#202028 100%);padding:9px 14px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.focus-header span{color:var(--pink3);font-size:11px;font-family:'Inter',sans-serif;font-weight:500;margin-left:auto;}
+.focus-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.focus-row:last-child{border-bottom:none;}
+.focus-row:hover{background:var(--hover-row);}
+.focus-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.focus-dot-red{background:#D03020;}
+.focus-dot-amber{background:#D07010;}
+.focus-dot-green{background:var(--green);}
+.focus-dot-blue{background:var(--blue);}
+.focus-text{flex:1;font-size:12px;color:var(--text);line-height:1.4;}
+.focus-meta{font-size:10px;color:var(--muted);}
+.focus-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0;}
+.focus-badge-red{background:var(--pill-high-bg);color:var(--pill-high-txt);}
+.focus-badge-amber{background:var(--pill-med-bg);color:var(--pill-med-txt);}
+.focus-badge-green{background:var(--stage-done-bg);color:var(--stage-done-txt);}
+.focus-badge-blue{background:#1A2E48;color:#70B8FF;}
+.focus-empty{padding:14px;text-align:center;font-size:12px;color:var(--muted);font-style:italic;}
+
+/* Quick-complete button in drawer */
+.m-quick-complete{width:100%;background:linear-gradient(135deg,var(--green),#0F7055);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.4px;margin-bottom:8px;display:none;}
+.m-quick-complete.show{display:block;}
+.m-quick-complete:active{opacity:.85;}
+
+/* Today focus section — desktop */
+#today-focus-wrap{margin-bottom:14px;}
+
+@media(max-width:768px){
+  .m-card{animation:cardIn .22s ease both;}
+  .m-card:nth-child(1){animation-delay:.03s}
+  .m-card:nth-child(2){animation-delay:.06s}
+  .m-card:nth-child(3){animation-delay:.09s}
+  .m-card:nth-child(4){animation-delay:.12s}
+  .m-card:nth-child(5){animation-delay:.15s}
+  .m-card:nth-child(6){animation-delay:.18s}
+  .m-card:nth-child(7){animation-delay:.2s}
+  .m-card:nth-child(n+8){animation-delay:.22s}
+  .m-drawer{animation:drawerUp .28s cubic-bezier(.32,1,.23,1) both;}
+  .focus-card{animation:fadeIn .3s ease both;}
+}
+
 </style>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(()=>console.log('AIL PWA ready'))
+      .catch(()=>{});
+  });
+}
+</script>
 </head>
 <body>
 
@@ -857,6 +1047,27 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 
 <!-- ══ GANTT BAR TOOLTIP ══ -->
 <div class="gantt-bar-tooltip" id="gantt-tooltip"></div>
+
+<!-- PULL TO REFRESH INDICATOR -->
+<div class="pull-indicator" id="pull-indicator"><div class="pull-spin"></div>Refreshing…</div>
+
+<!-- MOBILE BOTTOM NAVIGATION -->
+<div class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mnav-btn active" onclick="showTab('overview',this)" data-tab="overview"><span class="mnav-icon">📊</span>Overview</button>
+    <button class="mnav-btn" onclick="showTab('projects',this)" data-tab="projects"><span class="mnav-icon">📁</span>Projects<span class="mnav-badge" id="mnav-badge-projects" style="display:none"></span></button>
+    <button class="mnav-btn" onclick="showTab('salesperson',this)" data-tab="salesperson"><span class="mnav-icon">👤</span>Sales</button>
+    <button class="mnav-btn" onclick="showTab('wiring',this)" data-tab="wiring"><span class="mnav-icon">⚡</span>Wiring<span class="mnav-badge" id="mnav-badge-wiring" style="display:none"></span></button>
+    <button class="mnav-btn" onclick="showTab('gantt',this)" data-tab="gantt"><span class="mnav-icon">📅</span>Gantt</button>
+    <button class="mnav-btn" onclick="showTab('changelog',this)" data-tab="changelog"><span class="mnav-icon">📋</span>Log</button>
+    <button class="mnav-btn" onclick="showTab('outside',this)" data-tab="outside"><span class="mnav-icon">🌐</span>Outside</button>
+  </div>
+</div>
+
+<!-- MOBILE STAGE DRAWER -->
+<div class="m-drawer-overlay" id="m-stage-drawer" onclick="if(event.target===this)closeMobileDrawer()">
+  <div class="m-drawer" id="m-drawer-content"></div>
+</div>
 
 <div class="dash">
 
@@ -903,6 +1114,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 <div class="body-wrap">
 
 <div id="tab-overview" class="panel active">
+  <div id="today-focus-wrap"></div>
   <div class="metrics">
     <div class="metric"><div class="metric-label">Total Projects</div><div class="metric-val" id="m-total">0</div><div class="metric-sub">Active pipeline</div></div>
     <div class="metric"><div class="metric-label">Completion Rate</div><div class="metric-val green" id="m-pct">0%</div><div class="metric-sub" id="m-pct-sub">Stage completion</div></div>
@@ -983,6 +1195,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
 </div>
 
 <div id="tab-projects" class="panel">
+  <button class="m-add-toggle admin-only" onclick="this.textContent=document.querySelector('#tab-projects .add-panel.admin-only').classList.toggle('m-open')?'✕ Close Form':'＋ Add New Project'">＋ Add New Project</button>
   <div class="add-panel admin-only">
     <div class="add-panel-title">＋ Add New Project</div>
     <div class="form-grid" style="grid-template-columns:repeat(7,1fr);">
@@ -1083,6 +1296,7 @@ html[data-theme="dark"] .badge-green{background:#0C3028;color:#40D4A0;border-col
         <tbody id="proj-tbody"></tbody>
       </table>
     </div>
+    <div id="mobile-proj-cards" class="mobile-proj-cards"></div>
   </div>
 </div>
 
@@ -1732,6 +1946,7 @@ function renderProjects(){
 
   _renderPagination(totalFiltered, _projPage, totalPages);
   _updateBulkBar();
+  if(window.innerWidth<=768) renderMobileProjCards();
 }
 
 function _renderPagination(total, page, pages){
@@ -3224,6 +3439,10 @@ function showTab(name,btn){
   if(name==='changelog') { renderChangelog(); }
   if(name==='gantt')     { renderGantt(); }
   if(name==='outside')   { renderOutsideProjects(); }
+  // Sync mobile bottom nav active state
+  document.querySelectorAll('.mnav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  // Re-render mobile project cards when switching to projects
+  if(name==='projects' && window.innerWidth<=768) renderMobileProjCards();
 }
 
 // ── REFRESH ALL — only re-renders active tab to avoid unnecessary work ──
@@ -3589,8 +3808,489 @@ function exportOutsidePDF(){
   win.document.close();
 }
 
+
+// ════════════════════════════════════════
+// ENHANCEMENTS v2
+// ════════════════════════════════════════
+
+// ── TODAY'S FOCUS PANEL ──────────────────────────────────────────────────────
+function renderTodayFocus(){
+  const wrap = document.getElementById('today-focus-wrap');
+  if(!wrap) return;
+  const todayStr = today();
+  const in7 = new Date(); in7.setDate(in7.getDate()+7);
+  const in7Str = in7.toISOString().slice(0,10);
+
+  const overdue=[], upcoming=[], recentDone=[];
+
+  projects.forEach(p=>{
+    STAGES.forEach((s,i)=>{
+      const sd = p[s];
+      if(!sd) return;
+      const label = STAGE_LABELS[i];
+      if(sd.status!=='Completed' && sd.deadline && sd.deadline < todayStr){
+        overdue.push({projNo:p.no, customer:p.customer, stage:label, deadline:sd.deadline, priority:p.priority, salesperson:p.salesperson||'—'});
+      }
+      if(sd.status!=='Completed' && sd.deadline && sd.deadline>=todayStr && sd.deadline<=in7Str){
+        upcoming.push({projNo:p.no, customer:p.customer, stage:label, deadline:sd.deadline, daysLeft:Math.round((new Date(sd.deadline)-new Date(todayStr))/(86400000)), salesperson:p.salesperson||'—'});
+      }
+      if(sd.status==='Completed' && sd.date===todayStr){
+        recentDone.push({projNo:p.no, customer:p.customer, stage:label, resp:sd.resp||'—'});
+      }
+    });
+  });
+  upcoming.sort((a,b)=>a.deadline.localeCompare(b.deadline));
+
+  const isMobile = window.innerWidth<=768;
+  if(!overdue.length && !upcoming.length && !recentDone.length){
+    wrap.innerHTML=''; return;
+  }
+
+  const overdueRows = overdue.slice(0,5).map(r=>`
+    <div class="focus-row" onclick="showTab('projects',document.querySelector('.tab[onclick*=\'projects\']'));setTimeout(()=>{ const gs=document.getElementById('global-search'); if(gs){gs.value='${esc(r.projNo)}';onGlobalSearch('${esc(r.projNo)}')} },100)">
+      <div class="focus-dot focus-dot-red"></div>
+      <div class="flex-1">
+        <div class="focus-text"><strong>${esc(r.projNo)}</strong> · ${esc(r.stage)}</div>
+        <div class="focus-meta">${esc(r.customer)} · ${esc(r.salesperson)}</div>
+      </div>
+      <span class="focus-badge focus-badge-red">Due ${esc(r.deadline)}</span>
+    </div>`).join('');
+
+  const upcomingRows = upcoming.slice(0,5).map(r=>`
+    <div class="focus-row" onclick="showTab('projects',document.querySelector('.tab[onclick*=\'projects\']'));setTimeout(()=>{ const gs=document.getElementById('global-search'); if(gs){gs.value='${esc(r.projNo)}';onGlobalSearch('${esc(r.projNo)}')} },100)">
+      <div class="focus-dot focus-dot-amber"></div>
+      <div class="flex-1">
+        <div class="focus-text"><strong>${esc(r.projNo)}</strong> · ${esc(r.stage)}</div>
+        <div class="focus-meta">${esc(r.customer)}</div>
+      </div>
+      <span class="focus-badge focus-badge-amber">${r.daysLeft===0?'Today':r.daysLeft===1?'Tomorrow':r.daysLeft+' days'}</span>
+    </div>`).join('');
+
+  const doneRows = recentDone.slice(0,3).map(r=>`
+    <div class="focus-row">
+      <div class="focus-dot focus-dot-green"></div>
+      <div class="flex-1">
+        <div class="focus-text"><strong>${esc(r.projNo)}</strong> · ${esc(r.stage)} ✓</div>
+        <div class="focus-meta">by ${esc(r.resp)}</div>
+      </div>
+      <span class="focus-badge focus-badge-green">Today</span>
+    </div>`).join('');
+
+  let html = '<div class="focus-card">';
+  html += `<div class="focus-header">🎯 Today's Focus <span>${new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}</span></div>`;
+
+  if(overdue.length){
+    html += `<div style="padding:6px 14px 2px;font-size:9px;font-weight:700;color:#D03020;text-transform:uppercase;letter-spacing:.06em;">🚨 Overdue (${overdue.length})</div>`;
+    html += overdueRows;
+    if(overdue.length>5) html += `<div class="focus-empty">+${overdue.length-5} more overdue items</div>`;
+  }
+  if(upcoming.length){
+    html += `<div style="padding:6px 14px 2px;font-size:9px;font-weight:700;color:#D07010;text-transform:uppercase;letter-spacing:.06em;">⏰ Due This Week (${upcoming.length})</div>`;
+    html += upcomingRows;
+    if(upcoming.length>5) html += `<div class="focus-empty">+${upcoming.length-5} more upcoming</div>`;
+  }
+  if(recentDone.length){
+    html += `<div style="padding:6px 14px 2px;font-size:9px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.06em;">✅ Completed Today (${recentDone.length})</div>`;
+    html += doneRows;
+  }
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+// ── NAV BADGE COUNTS ─────────────────────────────────────────────────────────
+function updateMobileNavBadges(){
+  if(window.innerWidth > 768) return;
+  const todayStr = today();
+  let overdueCount = 0;
+  projects.forEach(p=>{
+    STAGES.forEach(s=>{
+      if(p[s].status!=='Completed' && p[s].deadline && p[s].deadline<todayStr) overdueCount++;
+    });
+  });
+  const pb = document.getElementById('mnav-badge-projects');
+  if(pb){ pb.textContent=overdueCount>9?'9+':overdueCount||''; pb.style.display=overdueCount?'flex':'none'; }
+
+  // Wiring badge — count unassigned wiring stages that are Running today
+  let wiringToday = 0;
+  projects.forEach(p=>{
+    const ws = p.wiring;
+    if(ws && ws.status==='Running' && (!wiringAssign[p.no])) wiringToday++;
+  });
+  const wb = document.getElementById('mnav-badge-wiring');
+  if(wb){ wb.textContent=wiringToday>9?'9+':wiringToday||''; wb.style.display=wiringToday?'flex':'none'; }
+}
+
+// ── PULL TO REFRESH ──────────────────────────────────────────────────────────
+(function setupPullToRefresh(){
+  if(typeof window==='undefined') return;
+  let _pty=0, _pulling=false;
+  const indicator=document.getElementById('pull-indicator');
+  document.addEventListener('touchstart',e=>{
+    if(window.scrollY===0 && window.innerWidth<=768) _pty=e.touches[0].clientY;
+    else _pty=0;
+  },{passive:true});
+  document.addEventListener('touchend',async e=>{
+    if(_pulling) return;
+    const dy=e.changedTouches[0].clientY - _pty;
+    if(_pty>0 && dy>80 && window.innerWidth<=768){
+      _pulling=true;
+      if(indicator) indicator.classList.add('show');
+      if('vibrate' in navigator) navigator.vibrate(30);
+      try{ await loadData(); refreshSalesDropdown(); refreshCustDropdown(); renderProjFilter(); refreshAll(true); }
+      catch(e){ console.warn(e); }
+      setTimeout(()=>{ if(indicator) indicator.classList.remove('show'); _pulling=false; }, 700);
+    }
+    _pty=0;
+  },{passive:true});
+})();
+
+// ── HAPTIC ON SAVE ───────────────────────────────────────────────────────────
+const _origShowToast = showToast;
+window.showToast = function(msg){
+  _origShowToast(msg);
+  if('vibrate' in navigator && msg.startsWith('✓')) navigator.vibrate(40);
+};
+
+// ── OVERRIDE renderMobileProjCards with progress + health ────────────────────
+function renderMobileProjCards(){
+  const container=document.getElementById('mobile-proj-cards');
+  if(!container) return;
+  if(!projects.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">📁</div>No projects yet — tap ＋ above to add one</div>';
+    return;
+  }
+  const todayStr=today();
+  const spSel=document.getElementById('proj-sp-filter');
+  const custSel=document.getElementById('proj-cust-filter');
+  const fromEl=document.getElementById('proj-date-from');
+  const toEl=document.getElementById('proj-date-to');
+  const chosenSP=spSel?spSel.value:'';
+  const chosenCust=custSel?custSel.value:'';
+  const fromDate=fromEl?fromEl.value:'';
+  const toDate=toEl?toEl.value:'';
+  const stageF=(document.getElementById('proj-stage-filter')||{}).value||'';
+  const statusF=(document.getElementById('proj-status-filter')||{}).value||'';
+  let filtered=projects.filter(p=>{
+    if(chosenSP && p.salesperson!==chosenSP) return false;
+    if(chosenCust && p.customer!==chosenCust) return false;
+    if(fromDate||toDate){
+      const dates=STAGES.map(s=>p[s].date).filter(Boolean);
+      if(!dates.length) return !fromDate;
+      const earliest=dates.reduce((a,b)=>a<b?a:b);
+      const latest=dates.reduce((a,b)=>a>b?a:b);
+      if(fromDate && latest<fromDate) return false;
+      if(toDate && earliest>toDate) return false;
+    }
+    if(stageF && statusF){if(p[stageF]?.status!==statusF) return false;}
+    else if(!stageF && statusF){if(!STAGES.some(s=>p[s]?.status===statusF)) return false;}
+    if(_globalSearch){
+      const hay=(p.no+' '+p.customer+' '+p.type+' '+(p.salesperson||'')+' '+(p.po||'')).toLowerCase();
+      if(!hay.includes(_globalSearch)) return false;
+    }
+    return true;
+  });
+  if(!filtered.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div>No projects match the selected filters</div>';
+    return;
+  }
+  const totalPages=Math.max(1,Math.ceil(filtered.length/_projPageSize));
+  const safeP=Math.max(1,Math.min(_projPage,totalPages));
+  const pageStart=(safeP-1)*_projPageSize;
+  const paginated=filtered.slice(pageStart,pageStart+_projPageSize);
+
+  container.innerHTML=paginated.map(p=>{
+    const pc=p.priority==='High'?'pill-high':p.priority==='Low'?'pill-low':'pill-med';
+    const doneCount=STAGES.filter(s=>p[s]?.status==='Completed').length;
+    const runCount=STAGES.filter(s=>p[s]?.status==='Running').length;
+    const hasOverdue=STAGES.some(s=>p[s]?.status!=='Completed'&&p[s]?.deadline&&p[s]?.deadline<todayStr);
+    const pct=Math.round(doneCount/7*100);
+    const barColor=doneCount===7?'var(--green)':hasOverdue?'#D03020':runCount>0?'var(--pink)':'var(--border)';
+    const healthClass=doneCount===7?'health-done':hasOverdue?'health-overdue':runCount>0?'health-run':'health-pend';
+
+    const chips=STAGES.map(s=>{
+      const st=p[s]?.status||'Pending';
+      const cls=st==='Completed'?'m-chip-comp':st==='Running'?'m-chip-run':'m-chip-pend';
+      const icon=st==='Completed'?'✓':st==='Running'?'⚡':'○';
+      const isOD=st!=='Completed'&&p[s]?.deadline&&p[s]?.deadline<todayStr;
+      return `<div class="m-stage-chip ${cls}" style="${isOD?'border-color:#D03020;':''}" onclick="openMobileStageDrawer('${esc(p.no)}','${s}')" role="button" aria-label="${STAGE_SHORT[s]} ${st}"><div class="m-chip-label">${STAGE_SHORT[s]}${isOD?' ⚠':''}</div><div class="m-chip-status">${icon} ${st.substring(0,4)}</div></div>`;
+    }).join('');
+    return `<div class="m-card ${healthClass}">
+      <div class="m-card-top"><div class="m-proj-no">${esc(p.no)}</div><span class="pill ${pc}">${esc(p.priority)}</span></div>
+      <div class="m-proj-cust">${esc(p.customer)}</div>
+      <div class="m-proj-meta">
+        <span>📋 ${esc(p.type||'—')}</span>
+        ${p.salesperson?`<span>👤 ${esc(p.salesperson)}</span>`:''}
+        ${p.po?`<span>PO: ${esc(p.po)}</span>`:''}
+      </div>
+      <div class="m-stage-row">${chips}</div>
+      <div class="m-card-prog-wrap">
+        <div class="m-card-prog-track"><div class="m-card-prog-fill" style="width:${pct}%;background:${barColor};"></div></div>
+        <div class="m-card-prog-label">${doneCount}/7</div>
+      </div>
+      <button class="m-expand-btn" onclick="openMobileProjectDrawer('${esc(p.no)}')">⚙ Edit all stages →</button>
+    </div>`;
+  }).join('');
+}
+
+// ── OVERRIDE openMobileStageDrawer — add Quick Complete button ────────────────
+function openMobileStageDrawer(projNo,stage){
+  _mDrawerProjNo=projNo; _mDrawerStage=stage;
+  const p=projects.find(x=>x.no===projNo);
+  if(!p) return;
+  const sd=p[stage];
+  const label=STAGE_LABELS[STAGES.indexOf(stage)];
+  const isNotDone=sd.status!=='Completed';
+  const dc=document.getElementById('m-drawer-content');
+  dc.innerHTML=`<div class="m-drawer-handle"></div>
+    <div class="m-drawer-head">
+      <div><div class="m-drawer-title">${esc(label)}</div><div class="m-drawer-sub">${esc(p.no)} · ${esc(p.customer)}</div></div>
+      <button class="m-drawer-close" onclick="closeMobileDrawer()">×</button>
+    </div>
+    <div class="m-drawer-body">
+      ${isNotDone?`<button class="m-quick-complete show" onclick="quickCompleteStage('${esc(p.no)}','${stage}')">⚡ Mark as Completed Now</button>`:''}
+      <div class="m-field"><label>Status</label>
+        <select id="md-status" class="stage-select ${selectClass(sd.status)}" onchange="this.className='stage-select '+selectClass(this.value)">
+          ${STATUS_OPTS.map(o=>`<option value="${o}"${o===sd.status?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="m-field"><label>Target deadline</label><input type="date" id="md-deadline" value="${esc(sd.deadline||'')}"></div>
+        <div class="m-field"><label>Actual date</label><input type="date" id="md-date" value="${esc(sd.date||'')}"></div>
+      </div>
+      <div class="m-field"><label>Responsible</label><input type="text" id="md-resp" placeholder="Person responsible…" value="${esc(sd.resp||'')}"></div>
+      <div class="m-field"><label>Remark / note</label><textarea id="md-remark" placeholder="Add a remark…">${esc(sd.remark||'')}</textarea></div>
+      <button class="m-save-btn" onclick="saveMobileStageData()">✓ Save Changes</button>
+      <button class="m-del-btn admin-only" onclick="if(requireAdmin()){closeMobileDrawer();deleteProject('${esc(p.no)}');}">🗑 Delete Project</button>
+    </div>`;
+  openMobileDrawer();
+}
+
+function quickCompleteStage(projNo,stage){
+  const p=projects.find(x=>x.no===projNo);
+  if(!p||!requireAdmin()) return;
+  const sd=p[stage];
+  const label=STAGE_LABELS[STAGES.indexOf(stage)];
+  const old=sd.status;
+  sd.status='Completed';
+  sd.date=today();
+  changelog.unshift({time:new Date().toLocaleString(),project:p.no,customer:p.customer,salesperson:p.salesperson||'—',stage:label,resp:sd.resp||'—',change:`Status: ${old} → Completed`,date:sd.date,remark:sd.remark});
+  saveData();
+  if('vibrate' in navigator) navigator.vibrate([30,20,60]);
+  closeMobileDrawer();
+  showToast(`✓ ${p.no} · ${label} → Completed`);
+  refreshAll(true);
+  updateMobileNavBadges();
+  renderTodayFocus();
+}
+
+// ── HOOK updateMobileNavBadges + renderTodayFocus into refreshAll ─────────────
+const _origRefreshAll = refreshAll;
+window.refreshAll = function(rerenderTable){
+  _origRefreshAll(rerenderTable);
+  updateMobileNavBadges();
+  renderTodayFocus();
+};
+
+
 // Auto-load on first render
 loadOutsideProjects();
+
+// ════════════════════════════════════════
+// MOBILE PWA — PROJECT CARDS & DRAWER
+// ════════════════════════════════════════
+
+const STAGE_SHORT={engineering:'Eng',purchase:'Pur',fabrication:'Fab',wiring:'Wir',testing:'Tst',dispatch:'Dis',installation:'Ins'};
+const STAGE_ICONS_M={engineering:'⚙',purchase:'🛒',fabrication:'🏭',wiring:'⚡',testing:'🧪',dispatch:'📦',installation:'🔧'};
+let _mDrawerProjNo='';
+let _mDrawerStage='';
+
+function renderMobileProjCards(){
+  const container=document.getElementById('mobile-proj-cards');
+  if(!container) return;
+  if(!projects.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">📁</div>No projects yet — tap ＋ above to add one</div>';
+    return;
+  }
+  const spSel=document.getElementById('proj-sp-filter');
+  const custSel=document.getElementById('proj-cust-filter');
+  const fromEl=document.getElementById('proj-date-from');
+  const toEl=document.getElementById('proj-date-to');
+  const chosenSP=spSel?spSel.value:'';
+  const chosenCust=custSel?custSel.value:'';
+  const fromDate=fromEl?fromEl.value:'';
+  const toDate=toEl?toEl.value:'';
+  const stageF=(document.getElementById('proj-stage-filter')||{}).value||'';
+  const statusF=(document.getElementById('proj-status-filter')||{}).value||'';
+  let filtered=projects.filter(p=>{
+    if(chosenSP && p.salesperson!==chosenSP) return false;
+    if(chosenCust && p.customer!==chosenCust) return false;
+    if(fromDate||toDate){
+      const dates=STAGES.map(s=>p[s].date).filter(Boolean);
+      if(!dates.length) return !fromDate;
+      const earliest=dates.reduce((a,b)=>a<b?a:b);
+      const latest=dates.reduce((a,b)=>a>b?a:b);
+      if(fromDate && latest<fromDate) return false;
+      if(toDate && earliest>toDate) return false;
+    }
+    if(stageF && statusF){if(p[stageF]?.status!==statusF) return false;}
+    else if(!stageF && statusF){if(!STAGES.some(s=>p[s]?.status===statusF)) return false;}
+    if(_globalSearch){
+      const hay=(p.no+' '+p.customer+' '+p.type+' '+(p.salesperson||'')+' '+(p.po||'')).toLowerCase();
+      if(!hay.includes(_globalSearch)) return false;
+    }
+    return true;
+  });
+  if(!filtered.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div>No projects match the selected filters</div>';
+    return;
+  }
+  const totalPages=Math.max(1,Math.ceil(filtered.length/_projPageSize));
+  const safeP=Math.max(1,Math.min(_projPage,totalPages));
+  const pageStart=(safeP-1)*_projPageSize;
+  const paginated=filtered.slice(pageStart,pageStart+_projPageSize);
+  container.innerHTML=paginated.map(p=>{
+    const pc=p.priority==='High'?'pill-high':p.priority==='Low'?'pill-low':'pill-med';
+    const chips=STAGES.map(s=>{
+      const st=p[s]?.status||'Pending';
+      const cls=st==='Completed'?'m-chip-comp':st==='Running'?'m-chip-run':'m-chip-pend';
+      const icon=st==='Completed'?'✓':st==='Running'?'⚡':'○';
+      return `<div class="m-stage-chip ${cls}" onclick="openMobileStageDrawer('${esc(p.no)}','${s}')" role="button" aria-label="${STAGE_SHORT[s]} ${st}"><div class="m-chip-label">${STAGE_SHORT[s]}</div><div class="m-chip-status">${icon} ${st.substring(0,4)}</div></div>`;
+    }).join('');
+    return `<div class="m-card">
+      <div class="m-card-top"><div class="m-proj-no">${esc(p.no)}</div><span class="pill ${pc}">${esc(p.priority)}</span></div>
+      <div class="m-proj-cust">${esc(p.customer)}</div>
+      <div class="m-proj-meta">
+        <span>📋 ${esc(p.type||'—')}</span>
+        ${p.salesperson?`<span>👤 ${esc(p.salesperson)}</span>`:''}
+        ${p.po?`<span>PO: ${esc(p.po)}</span>`:''}
+      </div>
+      <div class="m-stage-row">${chips}</div>
+      <button class="m-expand-btn" onclick="openMobileProjectDrawer('${esc(p.no)}')">⚙ Edit all stages →</button>
+    </div>`;
+  }).join('');
+}
+
+function openMobileStageDrawer(projNo,stage){
+  _mDrawerProjNo=projNo; _mDrawerStage=stage;
+  const p=projects.find(x=>x.no===projNo);
+  if(!p) return;
+  const sd=p[stage];
+  const label=STAGE_LABELS[STAGES.indexOf(stage)];
+  const dc=document.getElementById('m-drawer-content');
+  dc.innerHTML=`<div class="m-drawer-handle"></div>
+    <div class="m-drawer-head">
+      <div><div class="m-drawer-title">${esc(label)}</div><div class="m-drawer-sub">${esc(p.no)} · ${esc(p.customer)}</div></div>
+      <button class="m-drawer-close" onclick="closeMobileDrawer()">×</button>
+    </div>
+    <div class="m-drawer-body">
+      <div class="m-field"><label>Status</label>
+        <select id="md-status" class="stage-select ${selectClass(sd.status)}" onchange="this.className='stage-select '+selectClass(this.value)">
+          ${STATUS_OPTS.map(o=>`<option value="${o}"${o===sd.status?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="m-field"><label>Target deadline</label><input type="date" id="md-deadline" value="${esc(sd.deadline||'')}"></div>
+        <div class="m-field"><label>Actual date</label><input type="date" id="md-date" value="${esc(sd.date||'')}"></div>
+      </div>
+      <div class="m-field"><label>Responsible</label><input type="text" id="md-resp" placeholder="Person responsible…" value="${esc(sd.resp||'')}"></div>
+      <div class="m-field"><label>Remark / note</label><textarea id="md-remark" placeholder="Add a remark…">${esc(sd.remark||'')}</textarea></div>
+      <button class="m-save-btn" onclick="saveMobileStageData()">✓ Save Changes</button>
+      <button class="m-del-btn admin-only" onclick="if(requireAdmin()){closeMobileDrawer();deleteProject('${esc(p.no)}');}">🗑 Delete Project</button>
+    </div>`;
+  openMobileDrawer();
+}
+
+function openMobileProjectDrawer(projNo){
+  _mDrawerProjNo=projNo; _mDrawerStage='';
+  const p=projects.find(x=>x.no===projNo);
+  if(!p) return;
+  const sections=STAGES.map((s,i)=>{
+    const sd=p[s]; const label=STAGE_LABELS[i];
+    return `<div class="m-stage-section">
+      <div class="m-stage-section-title">${STAGE_ICONS_M[s]} ${label}</div>
+      <div class="m-field"><label>Status</label>
+        <select class="stage-select ${selectClass(sd.status)}" onchange="onStatusChange('${esc(p.no)}','${s}',this);this.className='stage-select '+selectClass(this.value)">
+          ${STATUS_OPTS.map(o=>`<option value="${o}"${o===sd.status?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="m-field"><label>Target</label><input type="date" value="${esc(sd.deadline||'')}" onchange="onDeadlineChange('${esc(p.no)}','${s}',this.value)"></div>
+        <div class="m-field"><label>Actual</label><input type="date" value="${esc(sd.date||'')}" onchange="onDateChange('${esc(p.no)}','${s}',this.value)"></div>
+      </div>
+      <div class="m-field"><label>Responsible</label><input type="text" placeholder="Person…" value="${esc(sd.resp||'')}" onblur="onRespChange('${esc(p.no)}','${s}',this.value)"></div>
+      <div class="m-field"><label>Remark</label><textarea onblur="onRemarkChange('${esc(p.no)}','${s}',this.value)">${esc(sd.remark||'')}</textarea></div>
+    </div>`;
+  }).join('');
+  const dc=document.getElementById('m-drawer-content');
+  dc.innerHTML=`<div class="m-drawer-handle"></div>
+    <div class="m-drawer-head">
+      <div><div class="m-drawer-title">${esc(p.no)}</div><div class="m-drawer-sub">${esc(p.customer)} · <span class="pill ${p.priority==='High'?'pill-high':p.priority==='Low'?'pill-low':'pill-med'}" style="font-size:10px;">${esc(p.priority)}</span></div></div>
+      <button class="m-drawer-close" onclick="closeMobileDrawer()">×</button>
+    </div>
+    <div class="m-drawer-body">${sections}
+      <button class="m-del-btn admin-only" onclick="if(requireAdmin()){closeMobileDrawer();deleteProject('${esc(p.no)}');}">🗑 Delete this project</button>
+    </div>`;
+  openMobileDrawer();
+}
+
+function saveMobileStageData(){
+  const p=projects.find(x=>x.no===_mDrawerProjNo);
+  if(!p||!_mDrawerStage) return;
+  if(!requireAdmin()) return;
+  const newStatus=document.getElementById('md-status')?.value;
+  const newDeadline=document.getElementById('md-deadline')?.value||'';
+  const newDate=document.getElementById('md-date')?.value||'';
+  const newResp=(document.getElementById('md-resp')?.value||'').trim();
+  const newRemark=(document.getElementById('md-remark')?.value||'').trim();
+  const stage=p[_mDrawerStage];
+  const label=STAGE_LABELS[STAGES.indexOf(_mDrawerStage)];
+  const old=stage.status;
+  const changes=[];
+  if(newStatus!==stage.status) changes.push(`Status: ${old} → ${newStatus}`);
+  if(newDate && newDate!==stage.date) changes.push(`Date → ${newDate}`);
+  if(newResp!==stage.resp) changes.push(`Responsible: ${stage.resp||'—'} → ${newResp||'—'}`);
+  stage.status=newStatus;
+  stage.deadline=newDeadline;
+  stage.date=newDate||(newStatus!=='Pending'&&!stage.date?today():stage.date);
+  stage.resp=newResp;
+  stage.remark=newRemark;
+  if(changes.length){
+    changelog.unshift({time:new Date().toLocaleString(),project:p.no,customer:p.customer,salesperson:p.salesperson||'—',stage:label,resp:newResp||'—',change:changes.join(', '),date:stage.date,remark:newRemark});
+  }
+  saveData();
+  showToast(`✓ ${p.no} · ${label} saved`);
+  closeMobileDrawer();
+  refreshAll(true);
+}
+
+function openMobileDrawer(){
+  const drawer=document.getElementById('m-stage-drawer');
+  if(drawer){drawer.classList.add('open');document.body.style.overflow='hidden';}
+}
+
+function closeMobileDrawer(){
+  const drawer=document.getElementById('m-stage-drawer');
+  if(drawer){drawer.classList.remove('open');document.body.style.overflow='';}
+}
+
+// Swipe down to close drawer
+(function(){
+  let sy=0;
+  document.addEventListener('touchstart',e=>{
+    const d=document.getElementById('m-stage-drawer');
+    if(d&&d.classList.contains('open')) sy=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    const d=document.getElementById('m-stage-drawer');
+    if(d&&d.classList.contains('open')&&e.changedTouches[0].clientY-sy>80) closeMobileDrawer();
+  },{passive:true});
+})();
+
+// Handle window resize — show/hide mobile cards
+window.addEventListener('resize',()=>{
+  if(window.innerWidth<=768 && _activeTab==='projects') renderMobileProjCards();
+});
+
 </script>
 
 <!-- ══ FOOTER ══ -->
