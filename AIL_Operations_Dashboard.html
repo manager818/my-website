@@ -1680,9 +1680,19 @@ const DB_TABLE = 'ail_app_state'; // single key-value table in Supabase
 function setCloudStatus(ok, msg){
   const dot = document.getElementById('cloud-dot');
   const lbl = document.getElementById('cloud-label');
-  if(dot){ dot.style.background = ok ? '#1E9B6B' : '#E020A0'; }
+  const isPending = msg && msg.includes('Saving');
+  if(dot){
+    dot.style.background   = isPending ? '#F5A800' : ok ? '#1E9B6B' : '#E020A0';
+    dot.style.animation    = isPending ? 'pulse 1s infinite' : 'none';
+  }
   if(lbl){ lbl.textContent = msg || (ok ? '☁ Cloud saved' : '⚠ Cloud error'); }
 }
+// Add pulse animation for saving indicator
+(function(){
+  const s=document.createElement('style');
+  s.textContent='@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}';
+  document.head.appendChild(s);
+})();
 
 async function loadData(){
   try {
@@ -1739,16 +1749,33 @@ let _saveTimer = null;
 let _retryCount = 0;
 let _retryTimer = null;
 
+let _hasPendingChanges = false;
+
 function saveData(){
+  _hasPendingChanges = true;
   // Debounce rapid saves by 600ms
   clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(()=>_doSave(), 600);
+  _saveTimer = setTimeout(async ()=>{
+    await _doSave();
+    _hasPendingChanges = false;
+  }, 600);
 }
 
 async function _doSave(){
   clearTimeout(_retryTimer);
   // ── Guard: must be logged in ──
-  if(!_currentUser){ console.warn('AIL _doSave: no current user — skipping'); return; }
+  if(!_currentUser){
+    // Try to recover session before giving up
+    try{
+      const { data:{ session } } = await sbClient.auth.getSession();
+      if(session?.user){ _currentUser = session.user; }
+      else {
+        showToast('⚠ Session expired — please sign in again to save');
+        console.warn('AIL _doSave: session expired, data not saved');
+        return;
+      }
+    }catch(_){ return; }
+  }
   try {
     setCloudStatus(true,'☁ Saving…');
     const rows = [
@@ -3580,6 +3607,13 @@ function refreshAll(rerenderTable=true){
   try {
     sbClient.channel('ail-realtime')
       .on('postgres_changes',{event:'*',schema:'public',table:DB_TABLE}, async ()=>{
+        // ── CRITICAL: if user has unsaved local changes, save them FIRST
+        // before loadData() overwrites in-memory data with Supabase state
+        if(_hasPendingChanges){
+          clearTimeout(_saveTimer);
+          await _doSave();
+          _hasPendingChanges = false;
+        }
         await loadData();
         refreshSalesDropdown(); refreshCustDropdown();
         renderProjFilter(); refreshAll(true);
@@ -3589,6 +3623,27 @@ function refreshAll(rerenderTable=true){
       })
       .subscribe();
   } catch(e){ console.warn('Realtime subscription failed',e); }
+
+  // ── Bug 2 fix: flush pending save when tab is hidden (switch tab / minimize) ──
+  document.addEventListener('visibilitychange', async ()=>{
+    if(document.hidden && _hasPendingChanges){
+      clearTimeout(_saveTimer);
+      await _doSave();
+      _hasPendingChanges = false;
+    }
+  });
+
+  // ── Bug 2 fix: warn user if they try to close with unsaved changes ──
+  window.addEventListener('beforeunload', e=>{
+    if(_hasPendingChanges){
+      // Flush synchronously as best-effort (async may not complete)
+      clearTimeout(_saveTimer);
+      _doSave();
+      // Show browser's "leave page?" dialog
+      e.preventDefault();
+      e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+    }
+  });
 
   // ── KEYBOARD SHORTCUTS ──
   document.addEventListener('keydown', e => {
