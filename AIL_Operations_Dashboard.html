@@ -1739,6 +1739,8 @@ function saveData(){
 
 async function _doSave(){
   clearTimeout(_retryTimer);
+  // ── Guard: must be logged in ──
+  if(!_currentUser){ console.warn('AIL _doSave: no current user — skipping'); return; }
   try {
     setCloudStatus(true,'☁ Saving…');
     const rows = [
@@ -1750,7 +1752,14 @@ async function _doSave(){
       { key: LS_WIRING_ASSIGN,  value: wiringAssign },
     ];
     const { error } = await sbClient.from(DB_TABLE).upsert(rows, { onConflict: 'key' });
-    if(error) throw error;
+    if(error){
+      // Surface RLS / permission errors clearly
+      console.error('AIL Supabase upsert error:', error);
+      if(error.code==='42501'||error.message?.includes('permission')||error.message?.includes('policy')){
+        showToast('⚠ Save blocked — check Supabase RLS policy on ail_app_state (see console)');
+      }
+      throw error;
+    }
     _retryCount = 0;
     setCloudStatus(true,'☁ Cloud saved ✓');
     // Also update localStorage cache on successful save
@@ -1763,11 +1772,12 @@ async function _doSave(){
       localStorage.setItem(LS_WIRING_ASSIGN,  JSON.stringify(wiringAssign));
     }catch(_){}
   } catch(e){
-    console.error('Cloud save failed',e);
+    console.error('AIL Cloud save failed:', e?.message||e, '| code:', e?.code);
     _retryCount++;
     const delay = Math.min(30000, 1000 * Math.pow(2, _retryCount));
     const secs = Math.round(delay/1000);
-    setCloudStatus(false,`⚠ Save failed — retrying in ${secs}s (attempt ${_retryCount})`);
+    setCloudStatus(false,`⚠ Save failed (${e?.code||e?.message||'network'}) — retry in ${secs}s`);
+    showToast(`⚠ Cloud save failed: ${e?.message||'check console'}`);
     // Fallback to localStorage so data isn't lost
     try{
       localStorage.setItem(LS_PROJECTS,       JSON.stringify(projects));
@@ -3139,14 +3149,16 @@ async function _applyUser(user){
     if(data && !error){
       if(data.role) role = data.role;   // 'admin' or 'viewer'
       if(data.name) name = data.name;   // display name from table
+      console.log(`AIL: user ${user.email} → role=${role} (from ail_users)`);
     } else if(error?.code === 'PGRST116'){
       // User not found in ail_users table
-      console.warn('AIL: user not found in ail_users — defaulting to viewer');
-      showToast('⚠ Account not configured — contact your administrator');
+      console.warn(`AIL: ${user.email} NOT found in ail_users table — role defaulted to viewer. Run the SQL fix in Supabase dashboard.`);
+      showToast('⚠ Your email is not in ail_users table — you have read-only access. Contact admin.');
       role = 'viewer';
     } else if(error){
       // Table may not exist — fall back to ADMIN_EMAILS
-      console.warn('AIL: ail_users query failed, using ADMIN_EMAILS fallback', error.message);
+      console.warn('AIL: ail_users query error (table may not exist):', error.code, error.message);
+      showToast(`⚠ ail_users table error: ${error.message}`);
       role = (ADMIN_EMAILS.length===0 || ADMIN_EMAILS.includes(user.email)) ? 'admin' : 'viewer';
     }
   } catch(e){
@@ -3203,10 +3215,50 @@ function _showApp(){
   document.querySelectorAll('.admin-only').forEach(el=>{
     el.style.display = _currentRole==='admin' ? '' : 'none';
   });
+  // If viewer, show a persistent warning banner
+  const existing = document.getElementById('role-warn-banner');
+  if(existing) existing.remove();
+  if(_currentRole !== 'admin'){
+    const banner = document.createElement('div');
+    banner.id = 'role-warn-banner';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#E020A0;color:#fff;font-size:13px;font-weight:600;text-align:center;padding:8px 16px;font-family:Inter,sans-serif;';
+    banner.innerHTML = `⚠ READ-ONLY MODE — your account (${_currentUser?.email}) is not admin in ail_users table. <button onclick="ailDiagnose()" style="background:#fff;color:#E020A0;border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-weight:700;margin-left:8px;">Diagnose</button>`;
+    document.body.prepend(banner);
+  }
+  // Auto-run connectivity test on first load (console only)
+  _ailSelfTest();
+}
+
+async function _ailSelfTest(){
+  try{
+    // Test 1: can we read ail_app_state?
+    const {data:rd, error:re} = await sbClient.from(DB_TABLE).select('key').limit(1);
+    if(re) console.error('AIL self-test READ  ail_app_state FAILED:', re.code, re.message);
+    else   console.log('AIL self-test READ  ail_app_state OK, rows:', rd?.length);
+    // Test 2: can we write ail_app_state?
+    const {error:we} = await sbClient.from(DB_TABLE).upsert([{key:'__selftest__',value:{ok:true}}],{onConflict:'key'});
+    if(we) console.error('AIL self-test WRITE ail_app_state FAILED:', we.code, we.message,'← this is why saves are not working');
+    else { console.log('AIL self-test WRITE ail_app_state OK'); await sbClient.from(DB_TABLE).delete().eq('key','__selftest__'); }
+    // Test 3: can we read ail_users?
+    const {data:ud, error:ue} = await sbClient.from('ail_users').select('email,role').limit(5);
+    if(ue) console.error('AIL self-test READ  ail_users FAILED:', ue.code, ue.message);
+    else   console.log('AIL self-test READ  ail_users OK, entries:', ud?.length, ud);
+  }catch(e){ console.error('AIL self-test exception:', e); }
+}
+
+async function ailDiagnose(){
+  showToast('Running diagnostics — check browser console (F12)');
+  await _ailSelfTest();
+  alert(`Diagnosis complete!\n\nUser: ${_currentUser?.email||'none'}\nRole: ${_currentRole}\n\nCheck browser console (F12 → Console) for detailed results.\n\nIf WRITE test failed → run the SQL fix in Supabase dashboard.\nIf role is 'viewer' → add your email to ail_users table with role='admin'.`);
 }
 
 function requireAdmin(){
-  if(_currentRole!=='admin'){ showToast('⚠ Read-only access — contact your administrator'); return false; }
+  if(_currentRole!=='admin'){
+    const email = _currentUser?.email || 'unknown';
+    console.warn(`AIL requireAdmin denied: user=${email}, role=${_currentRole}. Add this email to ail_users table with role='admin'.`);
+    showToast('⚠ Read-only access — your email needs admin role in Supabase ail_users table');
+    return false;
+  }
   return true;
 }
 
