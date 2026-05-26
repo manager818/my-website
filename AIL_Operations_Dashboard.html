@@ -1578,7 +1578,7 @@ if('serviceWorker' in navigator){
   <div class="card" style="overflow:hidden;">
     <div style="background:linear-gradient(90deg,#111,#252525);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
       <span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;">🌐 Outside Project Records</span>
-      <span style="font-size:11px;color:rgba(255,255,255,0.5);">Track external / third-party project work</span>
+      <span id="op-cloud-badge" style="font-size:11px;color:#1E9B6B;font-weight:600;background:rgba(30,155,107,0.15);padding:3px 10px;border-radius:10px;border:1px solid rgba(30,155,107,0.3);">☁ Cloud</span>
     </div>
     <div style="overflow-x:auto;">
       <table class="log-table" id="op-table">
@@ -1697,6 +1697,9 @@ async function loadData(){
     wiringPersons = Array.isArray(map[LS_WIRING_PERSONS])? map[LS_WIRING_PERSONS]: [];
     wiringAssign  = (map[LS_WIRING_ASSIGN] && typeof map[LS_WIRING_ASSIGN]==='object' && !Array.isArray(map[LS_WIRING_ASSIGN]))
                     ? map[LS_WIRING_ASSIGN] : {};
+    // ── Outside Projects (now Supabase-backed) ──
+    if(typeof _opProjects !== 'undefined')
+      _opProjects = Array.isArray(map['ail_outside_projects_v1']) ? map['ail_outside_projects_v1'] : [];
     // ── MIGRATION: ensure every project has all current stages + deadline field ──
     const blankStage=()=>({status:'Pending',date:'',deadline:'',resp:'',remark:''});
     projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); if(p[s].deadline===undefined)p[s].deadline=''; }); });
@@ -1718,6 +1721,11 @@ async function loadData(){
       customers     = lsCustomers     ? JSON.parse(lsCustomers)     : [];
       wiringPersons = lsWiringPersons ? JSON.parse(lsWiringPersons) : [];
       wiringAssign  = lsWiringAssign  ? JSON.parse(lsWiringAssign)  : {};
+      // Outside Projects localStorage fallback
+      try{
+        const lsOp = localStorage.getItem('ail_outside_projects_v1');
+        if(typeof _opProjects !== 'undefined') _opProjects = lsOp ? JSON.parse(lsOp) : [];
+      }catch(_){}
       const blankStage=()=>({status:'Pending',date:'',deadline:'',resp:'',remark:''});
       projects.forEach(p=>{ STAGES.forEach(s=>{ if(!p[s]) p[s]=blankStage(); if(p[s].deadline===undefined)p[s].deadline=''; }); });
       if(projects.length) setCloudStatus(false,'⚠ Offline — showing cached data ('+projects.length+' projects)');
@@ -3575,6 +3583,8 @@ function refreshAll(rerenderTable=true){
         await loadData();
         refreshSalesDropdown(); refreshCustDropdown();
         renderProjFilter(); refreshAll(true);
+        // Also refresh outside projects if that tab is active
+        if(_activeTab==='outside') renderOutsideProjects();
         setCloudStatus(true,'☁ Live sync ✓');
       })
       .subscribe();
@@ -3656,24 +3666,56 @@ function toggleTheme(){
 <!-- ══ OUTSIDE PROJECT SCRIPT ══ -->
 <script>
 // ════════════════════════════════════════
-// OUTSIDE PROJECT — localStorage-backed
+// OUTSIDE PROJECT — ☁ Supabase-backed
+// (data lives in ail_app_state, key=ail_outside_projects_v1)
+// _opProjects is loaded by loadData() on startup and on realtime sync.
+// saveOutsideToStorage() now calls saveData() which upserts to Supabase.
 // ════════════════════════════════════════
 const LS_OUTSIDE = 'ail_outside_projects_v1';
 let _opProjects = [];
 let _opEditId = null;
 
 function loadOutsideProjects(){
-  try{ _opProjects = JSON.parse(localStorage.getItem(LS_OUTSIDE)||'[]'); }
-  catch(e){ _opProjects=[]; }
+  // Data is already loaded from Supabase by loadData().
+  // This function is kept for compatibility; ensure _opProjects is an array.
+  if(!Array.isArray(_opProjects)) _opProjects = [];
 }
 
 function saveOutsideToStorage(){
-  try{ localStorage.setItem(LS_OUTSIDE, JSON.stringify(_opProjects)); }catch(e){}
+  // ── Dedicated Supabase save — completely isolated from main _doSave ──
+  // This way outside projects can never break main data saving.
+  _saveOutsideProjects();
+}
+
+let _opSaveTimer = null;
+function _saveOutsideProjects(){
+  clearTimeout(_opSaveTimer);
+  _opSaveTimer = setTimeout(_doSaveOutside, 600);
+}
+
+async function _doSaveOutside(){
+  if(!_currentUser){ return; }
+  try{
+    const { error } = await sbClient.from(DB_TABLE).upsert(
+      [{ key: LS_OUTSIDE, value: _opProjects }],
+      { onConflict: 'key' }
+    );
+    if(error) throw error;
+    // Update localStorage cache too
+    try{ localStorage.setItem(LS_OUTSIDE, JSON.stringify(_opProjects)); }catch(_){}
+    console.log('AIL outside projects saved to Supabase ✓');
+  } catch(e){
+    console.error('AIL outside projects save failed:', e?.message||e);
+    // Fallback: keep in localStorage at least
+    try{ localStorage.setItem(LS_OUTSIDE, JSON.stringify(_opProjects)); }catch(_){}
+    showToast('⚠ Outside projects save failed — cached locally');
+  }
 }
 
 function opVal(id){ return (document.getElementById(id)||{}).value?.trim()||''; }
 
 function saveOutsideProject(){
+  if(!requireAdmin()) return;
   const cust    = opVal('op-f-cust');
   const supplier = opVal('op-f-supplier');
   const details = opVal('op-f-details');
@@ -3693,7 +3735,7 @@ function saveOutsideProject(){
   if(!details){ errEl.textContent='⚠ Project Details are required.'; return; }
   errEl.textContent='';
 
-  loadOutsideProjects();
+  if(!Array.isArray(_opProjects)) _opProjects = [];
 
   if(_opEditId !== null){
     // Edit mode
@@ -3734,7 +3776,7 @@ function resetOPForm(){
 function cancelOutsideEdit(){ resetOPForm(); renderOutsideProjects(); }
 
 function editOutsideProject(id){
-  loadOutsideProjects();
+  if(!requireAdmin()) return;
   const p = _opProjects.find(x=>x.id===id);
   if(!p) return;
   _opEditId = id;
@@ -3759,8 +3801,8 @@ function editOutsideProject(id){
 }
 
 function deleteOutsideProject(id){
+  if(!requireAdmin()) return;
   if(!confirm('Delete this outside project? This cannot be undone.')) return;
-  loadOutsideProjects();
   _opProjects = _opProjects.filter(p=>p.id!==id);
   saveOutsideToStorage();
   renderOutsideProjects();
@@ -3793,7 +3835,12 @@ function clearOPFilters(){
 }
 
 function renderOutsideProjects(){
-  loadOutsideProjects();
+  // _opProjects is already in memory (loaded by loadData from Supabase)
+  if(!Array.isArray(_opProjects)) _opProjects = [];
+
+  // Show cloud sync badge
+  const badge = document.getElementById('op-cloud-badge');
+  if(badge){ badge.textContent = _opProjects.length + ' record' + (_opProjects.length!==1?'s':'') + ' · ☁ Cloud'; }
 
   const search  = (document.getElementById('op-search')?.value||'').toLowerCase().trim();
   const dateFrom= document.getElementById('op-date-from')?.value||'';
@@ -3842,7 +3889,7 @@ function renderOutsideProjects(){
 
 // ── Outside Project PDF Export ──
 function exportOutsidePDF(){
-  loadOutsideProjects();
+  if(!Array.isArray(_opProjects)) _opProjects = [];
   const search  = (document.getElementById('op-search')?.value||'').toLowerCase().trim();
   const dateFrom= document.getElementById('op-date-from')?.value||'';
   const dateTo  = document.getElementById('op-date-to')?.value||'';
@@ -4174,8 +4221,8 @@ window.refreshAll = function(rerenderTable){
 };
 
 
-// Auto-load on first render
-loadOutsideProjects();
+// _opProjects already loaded from Supabase via loadData() during init()
+// No manual localStorage load needed
 
 // ════════════════════════════════════════
 // MOBILE PWA — PROJECT CARDS & DRAWER
