@@ -1796,6 +1796,7 @@ async function _doSave(){
       throw error;
     }
     _retryCount = 0;
+    _hasPendingChanges = false;
     setCloudStatus(true,'☁ Cloud saved ✓');
     // Also update localStorage cache on successful save
     try{
@@ -1807,6 +1808,7 @@ async function _doSave(){
       localStorage.setItem(LS_WIRING_ASSIGN,  JSON.stringify(wiringAssign));
     }catch(_){}
   } catch(e){
+    _hasPendingChanges = false; // always reset — retry timer will re-trigger if needed
     console.error('AIL Cloud save failed:', e?.message||e, '| code:', e?.code);
     _retryCount++;
     const delay = Math.min(30000, 1000 * Math.pow(2, _retryCount));
@@ -3624,24 +3626,12 @@ function refreshAll(rerenderTable=true){
       .subscribe();
   } catch(e){ console.warn('Realtime subscription failed',e); }
 
-  // ── Bug 2 fix: flush pending save when tab is hidden (switch tab / minimize) ──
+  // ── Flush pending save when tab is hidden (switch tab / minimize / close) ──
+  // Silent best-effort only — NO browser dialog, no blocking the user
   document.addEventListener('visibilitychange', async ()=>{
     if(document.hidden && _hasPendingChanges){
       clearTimeout(_saveTimer);
       await _doSave();
-      _hasPendingChanges = false;
-    }
-  });
-
-  // ── Bug 2 fix: warn user if they try to close with unsaved changes ──
-  window.addEventListener('beforeunload', e=>{
-    if(_hasPendingChanges){
-      // Flush synchronously as best-effort (async may not complete)
-      clearTimeout(_saveTimer);
-      _doSave();
-      // Show browser's "leave page?" dialog
-      e.preventDefault();
-      e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
     }
   });
 
